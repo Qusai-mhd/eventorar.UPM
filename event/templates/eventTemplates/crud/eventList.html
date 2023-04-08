@@ -1,0 +1,34 @@
+{% extends "eventTemplates/crud/base.html" %}
+
+{% block container %}
+<table class="table">
+    <tr>
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Event Name</th>
+                <th scope="col">Date</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td><a href="{% url 'event-detail' pk=event.id %}">{{event.name}}</a></td>
+                <td>{{event.date}}</td>
+                <td>
+                    <div>
+                    <a href="{% url 'event-update' pk=event.id %}">Edit</a>
+                    <a href="">Publish</a>
+                    <a style="color: red;" href="{% url 'event-delete' pk=event.id %}">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+<a href="{% url 'event-create' %}">Create a new event</a>
+{% if is_paginated %}
+    {% include "eventTemplates/crud/pagination.html" %}
+{% endif %}
+
+{% endblock %}

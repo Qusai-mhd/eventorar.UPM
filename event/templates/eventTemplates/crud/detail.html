@@ -1,0 +1,27 @@
+{% extends "eventTemplates/crud/base.html" %}
+{% block container %}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Event Details #{{event.id}}</h5>
+    </div>
+    <div class="card-body">
+    <dl class="row">
+      <dt class="col-sm-3">Event Name</dt>
+      <dd class="col-sm-9">{{ event.name }}</dd>
+      <dt class="col-sm-3">Organizer</dt>
+      <dd class="col-sm-9">{{ event.organizer }}</dd>
+      <dt class="col-sm-3">Date</dt>
+      <dd class="col-sm-9">{{ event.date }}</dd>
+      <dt class="col-sm-3">Time</dt>
+      <dd class="col-sm-9">{{ event.time }}</dd>
+      <dt class="col-sm-3">Location</dt>
+      <dd class="col-sm-9">{{ event.location }}</dd>
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9">{{ event.description }}</dd>
+    </dl>
+
+    </div>
+</div>
+
+{% endblock %}

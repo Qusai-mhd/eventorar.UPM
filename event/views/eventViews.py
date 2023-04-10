@@ -25,8 +25,10 @@ class EventListView(ListView):
 class EventCreateView(CreateView):
     model=Event
     template_name='eventTemplates/crud/createEvent.html'
-    fields='__all__'
-    success_url=reverse_lazy('created-events-list')
+    fields='name','organizer','date','time','location','description'
+    
+    def get_success_url(self):
+        return reverse_lazy('event-detail',kwargs={'pk':self.object.id})
 
 class EventDetailView(DetailView):
     model=Event
@@ -37,7 +39,7 @@ class EventUpdateView(UpdateView):
     model=Event
     template_name='eventTemplates/crud/update.html'
     context_object_name='event'
-    fields='__all__'
+    fields='name','organizer','date','time','location','description'
     
     def get_success_url(self):
         return reverse_lazy('event-detail',kwargs={'pk': self.object.id})

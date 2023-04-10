@@ -75,16 +75,28 @@ WSGI_APPLICATION = 'Eventorar.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'eventorar',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'PORT':'3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eventorar',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'bd2gghjmsxdjhsaalruq',
+        'HOST': 'bd2gghjmsxdjhsaalruq-mysql.services.clever-cloud.com',
+        'USER': 'uwqk25hpyivbvxyy',
+        'PASSWORD': 'cVxEc8G7rT2fhoDIABZY',
         'PORT':'3306',
     }
 }
+
 
 
 # Password validation

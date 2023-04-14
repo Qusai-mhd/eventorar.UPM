@@ -1,0 +1,10 @@
+{% extends "eventTemplates/crud/base.html" %}
+{% block container %}
+    <h5>Select The Target Audience</h5>
+    <form action="{% url 'event:event-publish' pk=event.id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit"/>
+        </form>
+        
+{% endblock %}

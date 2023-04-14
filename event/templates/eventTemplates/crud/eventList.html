@@ -13,20 +13,28 @@
         <tbody>
             {% for event in events %}
             <tr>
-                <td><a href="{% url 'event-detail' pk=event.id %}">{{event.name}}</a></td>
+                <td><a href="{% url 'event:event-detail' pk=event.id %}">{{event.name}}</a></td>
                 <td>{{event.date}}</td>
                 <td>
-                    <div>
-                    <a href="{% url 'event-update' pk=event.id %}">Edit</a>
-                    <a href="">Publish</a>
-                    <a style="color: red;" href="{% url 'event-delete' pk=event.id %}">Delete</a>
+                    {% if event.is_published %}
+                        <div>
+                            <button disabled>Edit</button>
+                            <button disabled>Publish</button>
+                            <button disabled>Delete</button>
+                    {% else %}
+
+                            <a href="{% url 'event:event-update' pk=event.id %}"><button>Edit</button></a>
+                            <a href="{% url 'event:event-publish' pk=event.id %}"><button>Publish</button></a>
+                            <a style="color: red;" href="{% url 'event:event-delete' pk=event.id %}"><button>Delete</button></a>
+                    {% endif %}
+
                     </div>
                 </td>
             </tr>
-            {% endfor %}
+             {% endfor %}
         </tbody>
 </table>
-<a href="{% url 'event-create' %}">Create a new event</a>
+<a href="{% url 'event:event-create' %}">Create a new event</a>
 {% if is_paginated %}
     {% include "eventTemplates/crud/pagination.html" %}
 {% endif %}

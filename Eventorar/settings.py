@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'event',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -140,4 +141,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL='event.EndUser'
+AUTH_USER_MODEL='authentication.CustomUser'
+
+AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
+
+
+#LOGIN_REDIRECT_URL = 'eventorar/event'
+

@@ -1,9 +1,22 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,Group
+from django.conf import settings
 
 # Create your models here.
-class EndUser(AbstractUser):
+class EndUser(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+    ]
     email=models.EmailField(unique=True)
+    gender=models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    class Meta:
+        permissions=(
+            ("can_register_in_all_published_events","To register in all events"),
+            ("can_register_in_male_published_events","To register in male events"),
+            ("can_register_in_female_published_events","To register in female events"),
+        )
 
 class Event(models.Model):
     SE_CLUB='SE'
@@ -30,6 +43,7 @@ class Event(models.Model):
     location=models.CharField(max_length=255,null=True,blank=True)
     description=models.CharField(max_length=255,null=True,blank=True)
     semester=models.CharField(max_length=255)
+    is_published=models.BooleanField(default=False)
 
 
     def save(self, *args, **kwargs):
@@ -45,28 +59,29 @@ class Event(models.Model):
         ordering=['name']
 
 class PublishedEvent(models.Model):
-    event_id=models.ForeignKey(Event,on_delete=models.CASCADE)
+    event=models.OneToOneField(Event,on_delete=models.CASCADE)
+    target_audience=models.ForeignKey(Group, on_delete=models.CASCADE)
     date_of_publication=models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return self.event_id.name
+        return self.event.name
     class Meta:
         ordering=['date_of_publication']
     
 class RegisteredEvent(models.Model):
-    user_id=models.ForeignKey(EndUser,on_delete=models.CASCADE)
-    event_id=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
 
 class HeldEvent(models.Model):
-    event_id=models.ForeignKey(EndUser,on_delete=models.CASCADE)
+    published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
     number_of_attendees=models.PositiveIntegerField()
     average_rating=models.DecimalField(max_digits=1,decimal_places=1,default=0)
 
 class Attendees(models.Model):
-    user_id=models.ForeignKey(EndUser,on_delete=models.CASCADE)
-    event_id=models.ForeignKey(HeldEvent,on_delete=models.CASCADE)
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    held_event=models.ForeignKey(HeldEvent,on_delete=models.CASCADE)
     time=models.DateTimeField(auto_now_add=True)
 
 class Certificate(models.Model):
-    user_id=models.ForeignKey(EndUser,on_delete=models.PROTECT)
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     certificate=models.CharField(max_length=255)

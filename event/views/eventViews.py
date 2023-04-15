@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render,get_object_or_404,redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import ListView,CreateView,DetailView,DeleteView,UpdateView,FormView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from ..models import Event,PublishedEvent,Group
@@ -77,57 +77,6 @@ class EventDeleteView(UserPassesTestMixin,DeleteView):
         return self.request.user.is_superuser
 
 
-
-# class PublishEventView(View):
-#     template_name='eventTemplates/publishEvent/publishEvent.html'
-#     def get(self, request, pk):
-#         event = get_object_or_404(Event, pk=pk)
-#         return render(request, self.template_name, {'event': event})
-    
-#     def post(self, request, pk):
-#         event = get_object_or_404(Event, pk=pk)
-#         target_audience = request.POST.get('option', None)
-
-#         try:
-#             if target_audience == 'all':
-#                 published_event = self.publish_to_all_group(event)
-#                 messages.success(request, 'Event has been published successfully!')
-#                 return render(request, 'eventTemplates/publishEvent/publishToAll.html', {'event': published_event})
-#             elif target_audience == 'm':
-#                 published_event = self.publish_to_males_group(event)
-#                 return render(request, 'eventTemplates/publishEvent/publish_to_males.html', {'event': published_event})
-#             elif target_audience == 'f':
-#                 published_event = self.publish_to_females_group(event)
-#                 return render(request, 'eventTemplates/publishEvent/publish_to_females.html', {'event': published_event})
-#         except:
-#             #print("Duplicated")
-#             # render the error message template
-#             messages.error(request,'Somthing went wrong during publishing the event')
-#             return render(request, 'eventTemplates/publishEvent/publish_error.html')
-#         return render(request, self.template_name, {'event': event})
-
-#     def publish_to_all_group(self, event):
-#         group = Group.objects.get(name='ALL')
-#         published_event = PublishedEvent.objects.create(event_id=event, target_audience=group)
-#         event.is_published = True
-#         event.save()
-#         return published_event
-
-#     def publish_to_males_group(self, event):
-#         group = Group.objects.get(name='Male')
-#         published_event = PublishedEvent.objects.create(event_id=event, target_audience=group)
-#         event.is_published = True
-#         event.save()
-#         return published_event
-
-#     def publish_to_females_group(self, event):
-#         group = Group.objects.get(name='Female')
-#         published_event = PublishedEvent.objects.create(event_id=event, target_audience=group)
-#         event.is_published = True
-#         event.save()
-#         return published_event
-
-
 class PublishEventView(UserPassesTestMixin,FormView):
     template_name='eventTemplates/publishEvent/publish_event.html'
     form_class=PublishEventForm
@@ -147,15 +96,11 @@ class PublishEventView(UserPassesTestMixin,FormView):
         try:
             with transaction.atomic():
                 if target_audience == 'all':
-                    published_event = self.publish_to_all_group(event)
-                    messages.success(self.request, 'Event has been published successfully!')
-                    # return redirect('event-detail', kwargs=published_event.pk)
+                    return self.publish_to_all_group(event)
                 elif target_audience == 'm':
-                    published_event = self.publish_to_males_group(event)
-                    messages.success(self.request, 'Event has been published successfully!')
+                    return self.publish_to_males_group(event)
                 elif target_audience == 'f':
-                    published_event = self.publish_to_females_group(event)
-                    messages.success(self.request, 'Event has been published successfully!')
+                    return self.publish_to_females_group(event)
                 return render(self.request, 'eventTemplates/publishEvent/publishToAll.html', {'event': published_event})
         except:
             messages.error(self.request,'Somthing went wrong during publishing the event')
@@ -163,24 +108,16 @@ class PublishEventView(UserPassesTestMixin,FormView):
         
     def publish_to_all_group(self, event):
             group = Group.objects.get(name='ALL')
-            published_event = PublishedEvent.objects.create(event=event, target_audience=group)
+            PublishedEvent.objects.create(event=event, target_audience=group)
             event.is_published = True
             event.save()
-
-    def publish_to_males_group(self, event):
-        group = Group.objects.get(name='Male')
-        published_event = PublishedEvent.objects.create(event=event, target_audience=group)
-        event.is_published = True
-        event.save()
-
-    def publish_to_females_group(self, event):
-        group = Group.objects.get(name='Female')
-        published_event = PublishedEvent.objects.create(event=event, target_audience=group)
-        event.is_published = True
-        event.save()
-
+            messages.success(self.request, 'Event has been published successfully!')
+            return redirect(reverse('event:event-detail', kwargs={'pk': event.pk}))
+    
     def test_func(self):
         return self.request.user.is_superuser
+    
+
 
 
 

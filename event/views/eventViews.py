@@ -96,28 +96,40 @@ class PublishEventView(UserPassesTestMixin,FormView):
         try:
             with transaction.atomic():
                 if target_audience == 'all':
-                    return self.publish_to_all_group(event)
+                    return self.publish(event,"All")
                 elif target_audience == 'm':
-                    return self.publish_to_males_group(event)
+                    return self.publish(event,"Male")
                 elif target_audience == 'f':
-                    return self.publish_to_females_group(event)
+                    return self.publish(event,"Female")
                 return render(self.request, 'eventTemplates/publishEvent/publishToAll.html', {'event': published_event})
         except:
             messages.error(self.request,'Somthing went wrong during publishing the event')
             return super().form_invalid(form)
         
-    def publish_to_all_group(self, event):
-            group = Group.objects.get(name='ALL')
+    def publish(self, event,t_audience):
+            group = Group.objects.get(name=t_audience)
             PublishedEvent.objects.create(event=event, target_audience=group)
             event.is_published = True
             event.save()
             messages.success(self.request, 'Event has been published successfully!')
-            return redirect(reverse('event:event-detail', kwargs={'pk': event.pk}))
+            return redirect(reverse('event:event-detail', kwargs={'pk': event.id}))
     
     def test_func(self):
         return self.request.user.is_superuser
     
 
+class UnpublishEventList(UserPassesTestMixin,ListView):
+    model=PublishedEvent
+    
+    def get_event(self):
+        return get_object_or_404(PublishedEvent, pk=self.kwargs['pk'])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['published_event'] = self.get_event()
+        return context
+    def get_queryset(self):
+        return super().get_queryset()
 
-
-
+    def test_func(self):
+        return self.request.user.is_superuser

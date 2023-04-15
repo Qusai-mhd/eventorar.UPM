@@ -1,0 +1,10 @@
+{% extends "eventTemplates/crud/base.html" %}
+{% block container %}
+  <h1>Unpublish Event</h1>
+  <p>Are you sure you want to unpublish {{ p_event.event.name }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Unpublish</button>
+  </form>
+{% endblock %}

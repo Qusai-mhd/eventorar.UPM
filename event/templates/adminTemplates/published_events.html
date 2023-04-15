@@ -20,7 +20,7 @@
                 <td>
                         <div>
                             <a href="{% url 'event:event-update' pk=event.event.id %}"><button>Edit</button></a>
-                            <a href=""><button>Unpublish</button></a>
+                            <a href="{% url 'event:event-unpublish' pk=event.id %}"><button>Unpublish</button></a>
                     </div>
                 </td>
             </tr>

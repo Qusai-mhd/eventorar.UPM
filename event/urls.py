@@ -10,11 +10,10 @@ urlpatterns = [
     path(r'event/<int:pk>/update',eventViews.EventUpdateView.as_view(),name='event-update'),
     path(r'event/<int:pk>/delete',eventViews.EventDeleteView.as_view(),name='event-delete'),
     path(r'event/<int:pk>/publish',eventViews.PublishEventView.as_view(),name='event-publish'),
+    path(r'event/<int:pk>/unpublish',eventViews.UnPublishEventView.as_view(),name='event-unpublish'),
 
-    path('event/published_events',adminViews.PublishedEventListView.as_view(),name='published_event'),
+    path('admin/published_events',adminViews.PublishedEventListView.as_view(),name='published_event'),
 
     path('home',endUserViews.EndUUserPublishedEventListView.as_view(),name='user-dash'),
-
-
 
 ]

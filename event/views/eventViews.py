@@ -3,12 +3,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from django.db import transaction
+from django.http import JsonResponse,HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse_lazy,reverse
-from django.views.generic import ListView,CreateView,DetailView,DeleteView,UpdateView,FormView
+from django.views.generic import ListView,CreateView,DetailView,DeleteView,UpdateView,FormView,View
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from ..models import Event,PublishedEvent,Group
-from ..forms import PublishEventForm
+from ..models import Event,PublishedEvent,Group,HeldEvent,RegisteredEvent
+from ..forms import PublishEventForm,UnpublishEventForm
 
 class EventListView(UserPassesTestMixin,ListView):
     model=Event
@@ -116,5 +117,29 @@ class PublishEventView(UserPassesTestMixin,FormView):
     
     def test_func(self):
         return self.request.user.is_superuser
-    
 
+
+class UnPublishEventView(UserPassesTestMixin,FormView):
+    model=PublishedEvent
+    template_name='eventTemplates/publishEvent/unpublish_event.html'
+    success_url=reverse_lazy('event:published_event')
+    form_class=UnpublishEventForm               
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['p_event'] = get_object_or_404(PublishedEvent, pk=self.kwargs['pk'])
+        return kwargs
+   
+    def form_valid(self, form):
+        event = form.published_event.event
+        event.is_published = False
+        event.save()
+        #RegisteredEvent.objects.filter(published_event=form.published_event).delete()
+        #Invalidate the related QR codes
+        form.published_event.delete()
+        messages.success(self.request, 'Event has been unpublished successfully!')
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.is_superuser
+    

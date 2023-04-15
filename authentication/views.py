@@ -18,9 +18,9 @@ def login_view(request):
         if user is not None:
             login(request, user)
             if user.is_superuser:
-                return redirect('event:created-events-list')
+                return redirect('event:admin-dash')
             else:
-                return redirect('event:home')
+                return redirect('event:user-dash')
 
         else:
             messages.error(request, 'Invalid email or password.')

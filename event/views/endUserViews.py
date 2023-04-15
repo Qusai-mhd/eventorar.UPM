@@ -4,14 +4,15 @@ from django.views.generic import ListView
 from ..models import PublishedEvent
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.utils import timezone
 
-# @login_required(login_url='auth:login')
-# def home(request):
-#     return render(request,'endUserTemplates/index.html')
 
+@method_decorator(login_required,name="dispatch")
 class EndUUserPublishedEventListView(ListView):
     model=PublishedEvent
-    template_name='endUserTemplates/index.html'
+    template_name='endUserTemplates/enduserdash.html'
     context_object_name='events'
     paginate_by=5
 
@@ -30,6 +31,10 @@ class EndUUserPublishedEventListView(ListView):
         return context
     
     def get_queryset(self):
+        today=timezone.now().date()
         user=self.request.user
         group_ids=user.groups.values_list('id',flat=True)
-        return PublishedEvent.objects.filter(Q(target_audience__id__in=group_ids))
+        return PublishedEvent.objects.filter(
+            Q(target_audience__id__in=group_ids) &
+            Q(event__date__gte=today))
+            

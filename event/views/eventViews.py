@@ -118,18 +118,3 @@ class PublishEventView(UserPassesTestMixin,FormView):
         return self.request.user.is_superuser
     
 
-class UnpublishEventList(UserPassesTestMixin,ListView):
-    model=PublishedEvent
-    
-    def get_event(self):
-        return get_object_or_404(PublishedEvent, pk=self.kwargs['pk'])
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['published_event'] = self.get_event()
-        return context
-    def get_queryset(self):
-        return super().get_queryset()
-
-    def test_func(self):
-        return self.request.user.is_superuser

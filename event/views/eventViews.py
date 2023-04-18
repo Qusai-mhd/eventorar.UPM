@@ -11,25 +11,26 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from ..models import Event,PublishedEvent,Group,HeldEvent,RegisteredEvent
 from ..forms import PublishEventForm,UnpublishEventForm
 
+
 class EventListView(UserPassesTestMixin,ListView):
     model=Event
     template_name='adminTemplates/admin_dashboard.html'
     queryset=Event.objects.filter()
     context_object_name='events'
-    # paginate_by=5
-    # def get_context_data(self, **kwargs):
-    #     context = super(EventListView, self).get_context_data(**kwargs)
-    #     events = self.get_queryset()
-    #     page = self.request.GET.get('page')
-    #     paginator = Paginator(events, self.paginate_by)
-    #     try:
-    #         events = paginator.page(page)
-    #     except PageNotAnInteger:
-    #         events = paginator.page(1)
-    #     except EmptyPage:
-    #         events = paginator.page(paginator.num_pages)
-    #     context['events'] = events
-    #     return context
+    paginate_by=5
+    def get_context_data(self, **kwargs):
+        context = super(EventListView, self).get_context_data(**kwargs)
+        events = self.get_queryset()
+        page = self.request.GET.get('page')
+        paginator = Paginator(events, self.paginate_by)
+        try:
+                events = paginator.page(page)
+        except PageNotAnInteger:
+                events = paginator.page(1)
+        except EmptyPage:
+                events = paginator.page(paginator.num_pages)
+                context['events'] = events
+        return context
     
     def test_func(self):
         return self.request.user.is_superuser
@@ -38,6 +39,7 @@ class EventCreateView(UserPassesTestMixin,CreateView):
     model=Event
     template_name='eventTemplates/crud/createEvent.html'
     fields='name','organizer','date','time','location','description'
+    
     
     def get_success_url(self):
         return reverse_lazy('event:event-detail',kwargs={'pk':self.object.id})

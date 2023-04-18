@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser,Group
 from django.conf import settings
 
+
 # Create your models here.
 class EndUser(models.Model):
     GENDER_CHOICES = [
@@ -57,6 +58,7 @@ class Event(models.Model):
         return self.name
     class Meta:
         ordering=['name']
+        
 
 class PublishedEvent(models.Model):
     event=models.OneToOneField(Event,on_delete=models.CASCADE)

@@ -1,0 +1,31 @@
+/* CSS code for pagination styles */
+.pagination a {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  
+  .pagination a:hover, .pagination a:focus {
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+  }
+  
+
+  
+  .pagination .ppage-item disabled {
+    color: #777;
+    cursor: not-allowed;
+  }
+  
+  .pagination .disabled:hover, .pagination .page-item disabled:focus {
+    background-color: #fff;
+    border-color: #ddd;
+  }

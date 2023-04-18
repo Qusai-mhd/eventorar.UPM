@@ -1,26 +1,31 @@
 {% extends "eventTemplates/crud/base.html" %}
 
 {% block container %}
-<table class="table">
+<h1 class="u-align-center u-text u-title u-text-1">Published Events<span style="font-size: 1.875rem;"></span>
+</h1>
+
+
+<table class="table u-align-center" style="font-size:125%">
     <tr>
         <thead class="thead-light">
             <tr>
-                <th scope="col">Event Name</th>
-                <th scope="col">Date of Publication</th>
-                <th scope="col">Audience</th>
-                <th scope="col"></th>
+                <th class="u-align-center" scope="col">Event Name</th>
+                <th class="u-align-center" scope="col">Date of Publication</th>
+                <th class="u-align-center" scope="col">Audience</th>
+                <th class="u-align-center" scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for event in events %}
             <tr>
-                <td><a href="{% url 'event:event-detail' pk=event.event.id %}">{{event.event.name}}</a></td>
+                <td><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.event.id %}">{{event.event.name}}</a></td>
                 <td>{{event.date_of_publication}}</td>
                 <td>{{event.target_audience}}</td>
                 <td>
                         <div>
-                            <a href="{% url 'event:event-update' pk=event.event.id %}"><button>Edit</button></a>
-                            <a href="{% url 'event:event-unpublish' pk=event.id %}"><button>Unpublish</button></a>
+                            <a href="{% url 'event:event-update' pk=event.id %}" class="edit" title="Edit" data-toggle="tooltip"><button style="color:RebeccaPurple" class="material-icons">&#xE254;</button></a>
+                           <br>
+                            <a href="{% url 'event:event-unpublish' pk=event.id %}"><button style="background: RebeccaPurple; color: white;">Unpublish</button></a>
                     </div>
                 </td>
             </tr>

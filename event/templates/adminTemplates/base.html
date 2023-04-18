@@ -4,25 +4,22 @@
 
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta name="keywords" content="​Online music education, ​Music Education, What We Do, ​Performances &amp;amp; Activities, Music School, Music psychology and conducting pedagogy, Contact Us">
-    <meta name="description" content="">
-    <title>Admin</title>
-    <link rel="stylesheet" href="{% static 'css/nicepageA.css' %}" media="screen">
-    <link rel="stylesheet" href="{% static 'css/Admin.css' %}">
-    <script class="u-script" type="text/javascript" src="{% static 'js/jqueryA.js' %}" defer=""></script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/nicepageA.js' %}" defer=""></script>
-    <meta name="generator" content="Nicepage 5.8.2, nicepage.com">
-    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Seymour+One:400">
-    
-    
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": ""
-}</script>
+  <link rel="stylesheet" href="{% static 'css/nicepageA.css' %}">
+  <link rel="stylesheet" href="{% static 'css/Admin.css' %}">
+  <link rel="stylesheet" href="{% static 'css/CRUD.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  
+
+
+
+  
     <meta name="theme-color" content="#5e277e">
     <meta property="og:title" content="Admin">
     <meta property="og:type" content="website">
@@ -37,7 +34,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg-f1e6" x="0px" y="0px" viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve" class="u-svg-content"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
                 </span>
               </button>
-              <input class="u-search-input" type="search" name="search" value="" placeholder="Search">
+              <input type="text" id="myInput" onkeyup="myFunction()" class="u-search-input" type="search" name="search" value="" placeholder="Search">
             </form>
             <h1 class="u-custom-font u-text u-text-default u-text-1">EVENTORAR</h1>
             <a href="{% url 'auth:logout' %}" class="u-border-2 u-border-hover-palette-1-dark-1 u-border-white u-btn u-btn-round u-button-style u-none u-radius-50 u-text-palette-2-base u-btn-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'img/3596092-c27cace3.png' %}" alt=""></span>

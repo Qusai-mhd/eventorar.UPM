@@ -150,4 +150,3 @@ AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 
 
 #LOGIN_REDIRECT_URL = 'eventorar/event'
-

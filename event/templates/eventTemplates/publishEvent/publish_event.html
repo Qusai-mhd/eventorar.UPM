@@ -1,10 +1,14 @@
 {% extends "eventTemplates/crud/base.html" %}
 {% block container %}
-    <h5>Select The Target Audience</h5>
+<div class="card u-align-center">
+    <div class="card-header">
+    <h5 style="font-size:190%; color:RebeccaPurple;">Select The Target Audience</h5>
+    </div> <br> 
     <form action="{% url 'event:event-publish' pk=event.id %}" method="post">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit"/>
+        {{ form }} <br> <br> 
+        <input style="height:50px;width:100px; font-weight:bold; font-size:100%;" type="submit" class="btn btn-success" value="Publish"/>
+        <br> <br> 
         </form>
-        
+    </div> 
 {% endblock %}

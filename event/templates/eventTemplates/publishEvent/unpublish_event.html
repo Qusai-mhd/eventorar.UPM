@@ -1,10 +1,17 @@
 {% extends "eventTemplates/crud/base.html" %}
 {% block container %}
-  <h1>Unpublish Event</h1>
-  <p>Are you sure you want to unpublish {{ p_event.event.name }}?</p>
+<div class="card u-align-center">
+  <div class="card-header">
+    <h5 class="card-title" style="font-size:190%; color:RebeccaPurple;">Unpublish Event</h5>
+  </div> 
+  <div class="card-body">
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Unpublish</button>
+    <div class="alert alert-warning" role="alert" style="font-weight:bold; font-size:100%;">
+      Are you sure you want to unpublish <strong>{{ p_event.event.name  }}</strong> ?
+  </div>
+    <button style="height:50px;width:100px; font-weight:bold; font-size:100%;" type="submit" class="btn btn-danger">Unpublish</button>
   </form>
+</div> 
 {% endblock %}

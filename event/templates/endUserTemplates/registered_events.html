@@ -1,0 +1,27 @@
+{% extends "endUserTemplates/base1.html" %}
+
+{% block container %}
+<table class="table">
+    <tr>
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Event Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Date of Registration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in registered_events %}
+            <tr>
+                <td><a href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a></td>
+                <td>{{event.published_event.event.date}}</td>
+                <td>{{event.published_event.date_of_publication}}</td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+{% if is_paginated %}
+    {% include "eventTemplates/crud/pagination.html" %}
+{% endif %}
+
+{% endblock %}

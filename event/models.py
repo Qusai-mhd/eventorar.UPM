@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser,Group
+from django.contrib.auth.models import Group
 from django.conf import settings
 
 
@@ -73,6 +73,12 @@ class PublishedEvent(models.Model):
 class RegisteredEvent(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
+    date_of_registration=models.DateField(auto_now_add=True)
+    def __str__(self):
+        return f'{self.user.email} / {self.published_event.event.name}'
+    
+    class Meta:
+        unique_together = ('user', 'published_event')
 
 class HeldEvent(models.Model):
     published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)

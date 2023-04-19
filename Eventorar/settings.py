@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+# import certifi
+# import ssl
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'event',
     'authentication',
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +102,17 @@ DATABASES = {
     }
 }
 
+MAILJET_API_KEY ='a65adf0e9cca920b641f1be4b970942b'
+MAILJET_API_SECRET ='f794fe9f60febe1155b252e6caf03c69'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'in-v3.mailjet.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = MAILJET_API_KEY
+EMAIL_HOST_PASSWORD = MAILJET_API_SECRET
 
+# EMAIL_USE_SSL = False
+# ssl._create_default_https_context = ssl._create_unverified_context
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -132,8 +146,6 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'event/static/'),
@@ -150,3 +162,22 @@ AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 
 
 #LOGIN_REDIRECT_URL = 'eventorar/event'
+
+# # Set the directory where the QR code images will be saved
+# QR_CODE_DIR = os.path.join(BASE_DIR, 'event/qr_codes')
+
+# # Set the base URL for accessing the QR code images
+# QR_CODE_URL = '/media/qr_codes/'
+
+# Set the secret key used for encrypting and decrypting the QR code data
+QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
+
+
+# Celery settings
+
+# set the celery broker url
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# set the celery result backend
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# set the celery timezone
+CELERY_TIMEZONE = 'UTC'

@@ -10,6 +10,8 @@ from django.views.generic import ListView,CreateView,DetailView,DeleteView,Updat
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from ..models import Event,PublishedEvent,Group,HeldEvent,RegisteredEvent
 from ..forms import PublishEventForm,UnpublishEventForm
+from .qrCodeViews import generate_qr_code
+from event.tasks import send_qr_code
 
 
 class EventListView(UserPassesTestMixin,ListView):
@@ -48,7 +50,7 @@ class EventCreateView(UserPassesTestMixin,CreateView):
         return self.request.user.is_superuser
     
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='authentication:login'), name='dispatch')
 class EventDetailView(DetailView):
     model=Event
     template_name='eventTemplates/crud/detail.html'
@@ -104,7 +106,7 @@ class PublishEventView(UserPassesTestMixin,FormView):
                     return self.publish(event,"Male")
                 elif target_audience == 'f':
                     return self.publish(event,"Female")
-                return render(self.request, 'eventTemplates/publishEvent/publishToAll.html', {'event': published_event})
+                return render(self.request, 'eventTemplates/publishEvent/publishToAll.html')
         except:
             messages.error(self.request,'Somthing went wrong during publishing the event')
             return super().form_invalid(form)
@@ -136,7 +138,7 @@ class UnPublishEventView(UserPassesTestMixin,FormView):
         event = form.published_event.event
         event.is_published = False
         event.save()
-        #RegisteredEvent.objects.filter(published_event=form.published_event).delete()
+        RegisteredEvent.objects.filter(published_event=form.published_event).delete()
         #Invalidate the related QR codes
         form.published_event.delete()
         messages.success(self.request, 'Event has been unpublished successfully!')
@@ -144,4 +146,30 @@ class UnPublishEventView(UserPassesTestMixin,FormView):
 
     def test_func(self):
         return self.request.user.is_superuser
+    
+@method_decorator(login_required(login_url='authentication:login'),name="dispatch")   
+class EventRegistrationView(View):
+    def post(self,request, pk):
+        user=self.request.user
+        published_event=PublishedEvent.objects.get(id=pk)
+        user_id=user.id
+        published_event_id=published_event.id
+        try:
+            with transaction.atomic():
+                qr_code_buffer=generate_qr_code(request,event_id=published_event_id,user_id=user_id)
+                send_qr_code(user_id,published_event_id,qr_code_buffer)
+                RegisteredEvent.objects.create(user=user,published_event=published_event)
+                messages.success(request, "Registered Successfully. A QR code has been sent to your email.")
+                return render(request,'eventTemplates/registerEvent/success-message.html', {"messages": messages.get_messages(request)})
+            
+                # if email:
+                # else:
+                #     messages.error(request, "Can't register for this event at the moment. Try again later or contact the registrar")       
+                #     return render(request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
+                # messages.success(self.request,"Registered Successfully. A QR code has been sent to your email.")
+                # return render(request,'eventTemplates/registerEvent/success-message.html', {"messages": messages.get_messages(request)})
+        except:
+            messages.error(self.request,"Can't register for this event! Try again or contact the registrar")
+            return render(request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
+
     

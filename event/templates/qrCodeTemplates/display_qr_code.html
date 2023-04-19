@@ -1,0 +1,24 @@
+
+  <div id="preview"></div>
+  <form id="qr-code-form" method="post" action="{% url 'event:scan_qr_code' %}">
+    {% csrf_token %}
+    <input type="hidden" name="qr_code_data" id="qr-code-data">
+  </form>
+
+  <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+  <script>
+    var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+    scanner.addListener('scan', function (content) {
+      document.getElementById('qr-code-data').value = content;
+      document.getElementById('qr-code-form').submit();
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+      if (cameras.length > 0) {
+        scanner.start(cameras[0]);
+      } else {
+        console.error('No cameras found.');
+      }
+    }).catch(function (e) {
+      console.error(e);
+    });
+  </script>

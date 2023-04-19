@@ -23,7 +23,7 @@
                 <td>{{event.target_audience}}</td>
                 <td>
                         <div>
-                            <a href="{% url 'event:event-update' pk=event.id %}" class="edit" title="Edit" data-toggle="tooltip"><button style="color:RebeccaPurple" class="material-icons">&#xE254;</button></a>
+                            <a href="{% url 'event:event-update' pk=event.event.id %}" class="edit" title="Edit" data-toggle="tooltip"><button style="color:RebeccaPurple" class="material-icons">&#xE254;</button></a>
                            <br>
                             <a href="{% url 'event:event-unpublish' pk=event.id %}"><button style="background: RebeccaPurple; color: white;">Unpublish</button></a>
                     </div>

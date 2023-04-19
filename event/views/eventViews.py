@@ -74,7 +74,7 @@ class EventDeleteView(UserPassesTestMixin,DeleteView):
     template_name='eventTemplates/crud/delete.html'
     queryset=Event.objects.filter(is_published=False)
     context_object_name='event'
-    success_url=reverse_lazy('event:created-events-list')
+    success_url=reverse_lazy('event:admin-dash')
 
     def test_func(self):
         return self.request.user.is_superuser

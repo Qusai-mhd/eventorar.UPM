@@ -6,6 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 mysqlclient = "*"
+qrcode = {extras = ["pil"], version = "*"}
+cryptography = "*"
+certifi = "*"
+requests = "*"
+celery = "*"
+redis = "*"
 
 [dev-packages]
 

@@ -159,6 +159,8 @@ class EventRegistrationView(View):
                 qr_code_buffer=generate_qr_code(request,event_id=published_event_id,user_id=user_id)
                 send_qr_code(user_id,published_event_id,qr_code_buffer)
                 RegisteredEvent.objects.create(user=user,published_event=published_event)
+                published_event.count+=1
+                published_event.save()
                 messages.success(request, "Registered Successfully. A QR code has been sent to your email.")
                 return render(request,'eventTemplates/registerEvent/success-message.html', {"messages": messages.get_messages(request)})
             

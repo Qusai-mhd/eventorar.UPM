@@ -18,7 +18,14 @@
         <tbody>
             {% for event in events %}
             <tr>
-                <td><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.event.id %}">{{event.event.name}}</a></td>
+                <td>
+                  <div>
+                    <a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.event.id %}">{{event.event.name}}</a>
+                    <br>
+                    <i style="font-size:medium;">&#xf2bd;{{event.count}}</i>
+                  </div>
+                </td>
+            </div>
                 <td>{{event.date_of_publication}}</td>
                 <td>{{event.target_audience}}</td>
                 <td>

@@ -64,6 +64,7 @@ class PublishedEvent(models.Model):
     event=models.OneToOneField(Event,on_delete=models.CASCADE)
     target_audience=models.ForeignKey(Group, on_delete=models.CASCADE)
     date_of_publication=models.DateField(auto_now_add=True)
+    count=models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.event.name

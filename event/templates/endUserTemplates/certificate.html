@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 600px;
+            margin: 0 auto;
+            padding: 50px;
+            border: 2px solid #ccc;
+        }
+        .header {
+            text-align: center;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .content {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .signature {
+            width: 200px;
+            height: auto;
+            margin-top: 50px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="" alt="Logo">
+            <div class="title">Certificate of Attendance</div>
+            <div class="subtitle">Presented to</div>
+            <div class="name">{{ user.email }}</div>
+        </div>
+        <div class="content">
+            <p>This certificate is presented to {{ user.email }} in recognition of their attendance at <strong>{{ event.published_event.event.name }}</strong> held on <strong>{{ date }}</strong>.</p>
+            <p>This serves as a testament to their commitment to learning and personal development. We congratulate {{ user.email }} on their achievement and wish them continued success in their endeavors.</p>
+        </div>
+        <img src="" alt="Signature" class="signature">
+        <div class="footer">Issued on {{ date }}</div>
+    </div>
+</body>
+</html>

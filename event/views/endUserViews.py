@@ -1,13 +1,17 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
-from ..models import PublishedEvent,RegisteredEvent,Attendees
+from django.views.generic import ListView,View
+from ..models import PublishedEvent,RegisteredEvent,Attendees,HeldEvent
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-from django.core.mail import send_mail
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse,HttpResponseBadRequest
+from django.shortcuts import render
+from django.template.loader import get_template
+import pdfkit
+
 
 @method_decorator(login_required(login_url='authentication:login'),name="dispatch")
 class EndUserPublishedEventListView(ListView):
@@ -89,7 +93,66 @@ class EventsHistoryView(ListView):
             events = paginator.page(paginator.num_pages)
         context['attended_events'] = events
         return context
+    
+    
+@method_decorator(login_required(login_url='authentication:login'),name="dispatch") 
+class GenerateCertificateView(View):
+    def post(self,request,pk):
+        if self.request.method=='POST':
+            # user=self.request.user
+            # print(user)
+            # event=HeldEvent.objects.get(id=pk)
+            # print(event)
+            # #check attendee
+            # attendee=Attendees.objects.filter(user=user,held_event=event)
+            # print(attendee)
+            # if attendee:
+            #         email=user.email
+            #         #first_name=user.first_name
+            #         #last_name=user.last_name
+            #         date=event.published_event.event.date
 
+            #         # Create a new PDF document
+            #         response = HttpResponse(content_type='application/pdf')
+            #         response['Content-Disposition'] = 'inline; filename="certificate.pdf"'
+            #         p = canvas.Canvas(response)
+
+            #         # Add the certificate content
+            #         p.drawString(100, 750, "Certificate of Attendance")
+            #         p.drawString(100, 700, f"This certificate is presented to {user.email} in recognition of their attendance at {event.published_event.event.name} held on {event.published_event.event.date}. This serves as a testament to their commitment to learning and personal development. We congratulate {user.email} on their achievement and wish them continued success in their endeavors. ")
+            #         # p.drawString(100, 700, f"Name: {name}")
+            #         # p.drawString(100, 650, f"Email: {email}")
+            #         # p.drawString(100, 600, f"Event: {event_name}")
+            #         # p.drawString(100, 550, f"Date Attended: {date_attended}")
+            #         # p.drawString(100, 600, f"Date: {date}")
+
+            #         # Close the PDF document
+            #         p.showPage()
+            #         p.save()
+            #         return response
+
+            user=self.request.user
+            event=HeldEvent.objects.get(id=pk)
+            attendee=Attendees.objects.filter(user=user,held_event=event)
+            if attendee:
+                context = {
+                    'user': user,
+                    'event': event,
+                    'date': event.published_event.event.date,
+                }
+                template = get_template('endUserTemplates/certificate.html')
+                html = template.render(context)
+                pdf = pdfkit.from_string(html, False)
+
+                # Create a new HTTP response with the PDF document
+                response = HttpResponse(pdf, content_type='application/pdf')
+                response['Content-Disposition'] = 'inline; filename="certificate.pdf"'
+                return response
+            else:
+                return HttpResponseBadRequest("Can't generate the certificate at the moment")
+            
+        else: 
+            return HttpResponseBadRequest("Invalid request method")
 
     
             

@@ -9,6 +9,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Organizer</th>
                 <th scope="col">Description</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,12 @@
                 <td>{{event.held_event.published_event.event.date}}</td>
                 <td>{{event.held_event.published_event.event.organizer}}</td>
                 <td>{{event.held_event.published_event.event.description}}</td>
+                <td>
+                    <form method="post" action="{% url 'event:generate-cert' pk=event.held_event.id %}" target="_blank">
+                        {% csrf_token %}
+                    <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Certificate</button>
+                    </form>
+                </td>
             </tr>
              {% endfor %}
         </tbody>

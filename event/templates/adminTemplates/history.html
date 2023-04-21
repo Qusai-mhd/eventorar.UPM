@@ -28,7 +28,7 @@
                 <td>{{event.published_event.event.organizer}}</td>
                 <td>
                     <div>
-                        <form method="post" action="{% url 'event:event-report' pk=event.id %}">
+                        <form method="post" action="{% url 'event:event-report' pk=event.id %}" target="_blank">
                             {% csrf_token %}
                         <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Report</button>
                         </form>

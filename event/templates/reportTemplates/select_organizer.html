@@ -7,7 +7,7 @@
     <h3>Organizer Report</h3>
     <h6>Select Organizer</h6>
 
-    <form action="{% url 'event:organizer-report' %}" method="post">         
+    <form action="{% url 'event:organizer-report' %}" method="post" target="_blank">         
         {% csrf_token %}
        <select name="option">
             {% for organizer in organizers %}

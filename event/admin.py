@@ -7,7 +7,6 @@ class PublishedEventAdmin(admin.ModelAdmin):
 
 admin.site.register(models.PublishedEvent, PublishedEventAdmin)
 
-admin.site.register(models.EndUser)
 admin.site.register(models.Event)
 admin.site.register(models.HeldEvent)
 admin.site.register(models.RegisteredEvent)

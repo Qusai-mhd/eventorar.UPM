@@ -1,0 +1,45 @@
+{% extends "eventTemplates/crud/base.html" %}
+
+{% block container %}
+<h1 class="u-align-center u-text u-title u-text-1">Published Events<span style="font-size: 1.875rem;"></span>
+</h1>
+
+
+<table class="table u-align-center" style="font-size:125%">
+    <tr>
+        <thead class="thead-light">
+            <tr>
+                <th class="u-align-center" scope="col">Event Title</th>
+                <th class="u-align-center" scope="col">Date</th>
+                <th class="u-align-center" scope="col">Organizer</th>
+                <th class="u-align-center" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>
+                  <div>
+                    <a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a>
+                  </div>
+                </td>
+            </div>
+                <td>{{event.published_event.event.date}}</td>
+                <td>{{event.published_event.event.organizer}}</td>
+                <td>
+                    <div>
+                        <form method="post" action="{% url 'event:event-report' pk=event.id %}">
+                            {% csrf_token %}
+                        <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Report</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+{% if is_paginated %}
+    {% include "eventTemplates/crud/pagination.html" %}
+{% endif %}
+
+{% endblock %}

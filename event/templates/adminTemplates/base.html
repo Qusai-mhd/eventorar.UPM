@@ -78,9 +78,16 @@
                 </div>
                 <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-5">
                   <div class="u-container-layout u-similar-container u-container-layout-5">
-                    <a href="" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-6"> &nbsp;Reports</a>
+                    <a href="{% url 'event:event-history' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-6"> &nbsp;History</a>
                   </div>
                 </div>
+
+                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-5">
+                  <div class="u-container-layout u-similar-container u-container-layout-5">
+                    <a href="{% url 'event:report' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-6"> &nbsp;Reports</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

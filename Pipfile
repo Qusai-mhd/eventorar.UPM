@@ -12,6 +12,7 @@ certifi = "*"
 requests = "*"
 celery = "*"
 redis = "*"
+reportlab = "*"
 
 [dev-packages]
 

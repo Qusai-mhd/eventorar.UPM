@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
-from ..models import PublishedEvent,RegisteredEvent
+from ..models import PublishedEvent,RegisteredEvent,Attendees
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -64,5 +64,32 @@ class RegisteredEventsListView(ListView):
             events = paginator.page(paginator.num_pages)
         context['registered_events'] = events
         return context
+    
+
+@method_decorator(login_required(login_url='authentication:login'),name="dispatch") 
+class EventsHistoryView(ListView):
+    model=Attendees
+    template_name='endUserTemplates/user_history.html'
+    paginate_by=5
+
+    def get_queryset(self):
+        user=self.request.user
+        return Attendees.objects.filter(user=user).order_by('held_event__published_event__event__date')
+    
+    def get_context_data(self, **kwargs):
+        context = super(EventsHistoryView, self).get_context_data(**kwargs)
+        events = self.get_queryset()
+        page = self.request.GET.get('page')
+        paginator = Paginator(events, self.paginate_by)
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+            events = paginator.page(1)
+        except EmptyPage:
+            events = paginator.page(paginator.num_pages)
+        context['attended_events'] = events
+        return context
+
+
     
             

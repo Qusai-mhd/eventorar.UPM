@@ -13,6 +13,7 @@
                 <th class="u-align-center" scope="col">Date</th>
                 <th class="u-align-center" scope="col">Organizer</th>
                 <th class="u-align-center" scope="col"></th>
+                <th class="u-align-center" scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +24,6 @@
                     <a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a>
                   </div>
                 </td>
-            </div>
                 <td>{{event.published_event.event.date}}</td>
                 <td>{{event.published_event.event.organizer}}</td>
                 <td>
@@ -34,6 +34,16 @@
                         </form>
                     </div>
                 </td>
+
+                <td>
+                    <div>
+                        <form method="post" action="{% url 'event:attendees-list' pk=event.id %}" target="_blank">
+                            {% csrf_token %}
+                        <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Attendees</button>
+                        </form>
+                    </div>
+                </td>
+
             </tr>
              {% endfor %}
         </tbody>

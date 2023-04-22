@@ -13,6 +13,7 @@
                 <th class="u-align-center" scope="col">Date of Publication</th>
                 <th class="u-align-center" scope="col">Audience</th>
                 <th class="u-align-center" scope="col">Actions</th>
+                <th class="u-align-center" scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +25,7 @@
                     <br>
                     <i style="font-size:medium;">&#xf2bd;{{event.count}}</i>
                   </div>
-                </td>
-            </div>
+                </td> 
                 <td>{{event.date_of_publication}}</td>
                 <td>{{event.target_audience}}</td>
                 <td>
@@ -34,7 +34,18 @@
                            <br>
                             <a href="{% url 'event:event-unpublish' pk=event.id %}"><button style="background: RebeccaPurple; color: white;">Unpublish</button></a>
                     </div>
+                    
                 </td>
+
+                <td>
+                    <div>
+                        <form method="post" action="{% url 'event:registrants-list' pk=event.id %}" target="_blank">
+                            {% csrf_token %}
+                        <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Registrants</button>
+                        </form>
+                    </div>
+                </td>
+
             </tr>
              {% endfor %}
         </tbody>

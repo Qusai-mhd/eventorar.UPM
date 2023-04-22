@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/report/organizer',reportViews.GenerateOrganizerBasedReportView.as_view(),name='organizer-report'),
     path(r'admin/report/event/<int:pk>',reportViews.GenerateEventBasedReport.as_view(),name='event-report'),
     path('admin/report',reportViews.GenerateReportView.as_view(),name='report'),
-
+    path(r'admin/attendeeslist/<int:pk>',reportViews.AttendeesListView.as_view(),name='attendees-list'),
+    path(r'admin/registrantslist/<int:pk>',reportViews.RegistrantsListView.as_view(),name='registrants-list'),
 
 ]

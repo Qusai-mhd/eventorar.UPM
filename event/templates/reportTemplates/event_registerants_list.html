@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>registrants List</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 12px;
+		}
+		h1 {
+			font-size: 24px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		h2,h4 {
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+		tfoot td {
+			font-weight: bold;
+			background-color: #f2f2f2;
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		.footer {
+			font-size: 10px;
+			text-align: center;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 10px;
+			background-color: #f2f2f2;
+			border-top: 1px solid #ddd;
+		}
+	</style>
+</head>
+<body>
+	<h1>registrants List</h1>
+	<h2>{{ event.event.name }}</h2>
+	<h4>Total Registrants: {{ registrants_num }}</h4>
+	<table>
+		<thead>
+			<tr>
+				<th>Registrant</th>
+				<th>Date of registration</th>
+			</tr>
+		</thead>
+		<tbody>
+            {% for registrant in registrants %}
+			<tr>
+				<td>{{ registrant.user.email }}</td>
+				<td>{{ registrant.date_of_registration }}</td>
+			</tr>
+            {% endfor %}
+		</tbody>
+	</table>
+	<div class="footer">
+	</div>
+</body>
+</html>

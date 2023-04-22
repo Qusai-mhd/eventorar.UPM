@@ -1,13 +1,10 @@
 from ..models import RegisteredEvent,PublishedEvent,HeldEvent,Attendees
 from authentication.models import CustomUser
-import os
 import qrcode
-import base64
 from cryptography.fernet import Fernet
 from django.conf import settings
-from django.http import HttpResponse
 from django.shortcuts import render,get_object_or_404
-from django.http import HttpResponseBadRequest,JsonResponse
+from django.http import JsonResponse
 from io import BytesIO
 from datetime import datetime
 from django.views.decorators.http import require_POST

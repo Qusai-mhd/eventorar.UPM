@@ -1,0 +1,35 @@
+{% extends "eventTemplates/crud/base.html" %}
+
+{% block container %}
+<h1 class="u-align-center u-text u-title u-text-1">Scan Event<span style="font-size: 1.875rem;"></span>
+</h1>
+
+
+<table class="table u-align-center" style="font-size:125%">
+    <tr>
+        <thead class="thead-light">
+            <tr>
+                <th class="u-align-center" scope="col">Event Title</th>
+                <th class="u-align-center" scope="col">Location</th>
+                <th class="u-align-center" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{event.event.name}}</td>
+                <td>{{event.event.location}}</td>
+                <td>
+                        <div>
+                            <a href="{% url 'event:scan-qr-code' event_id=event.id %}"><button style="background: RebeccaPurple; color: white;">Scan</button></a>
+                    </div>
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+</table>
+{% if is_paginated %}
+    {% include "eventTemplates/crud/pagination.html" %}
+{% endif %}
+
+{% endblock %}

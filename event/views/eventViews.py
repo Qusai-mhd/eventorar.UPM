@@ -179,28 +179,3 @@ class EventRegistrationView(View):
             messages.error(self.request,"Can't register for this event! Try again or contact the registrar")
             return render(self.request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
         
-
-
-class EventHistoryListView(UserPassesTestMixin,ListView):
-    model=Event
-    template_name='adminTemplates/history.html'
-    queryset=HeldEvent.objects.filter()
-    context_object_name='events'
-    paginate_by=5
-    def get_context_data(self, **kwargs):
-        context = super(EventHistoryListView, self).get_context_data(**kwargs)
-        events = self.get_queryset()
-        page = self.request.GET.get('page')
-        paginator = Paginator(events, self.paginate_by)
-        try:
-                events = paginator.page(page)
-        except PageNotAnInteger:
-                events = paginator.page(1)
-        except EmptyPage:
-                events = paginator.page(paginator.num_pages)
-                context['events'] = events
-        return context
-    
-    def test_func(self):
-        return self.request.user.is_superuser
-    

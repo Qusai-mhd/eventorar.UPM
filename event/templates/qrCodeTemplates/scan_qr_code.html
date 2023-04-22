@@ -1,0 +1,74 @@
+{% extends "eventTemplates/crud/base.html" %}
+{% block container %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scan QR Code</title>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+  </head>
+  <body>
+    <h1>Scan QR Code</h1>
+
+    <video id="preview"></video>
+
+    <button type="button" onclick="stopScanning()">Cancel</button>
+
+    <table id="scanned-data">
+      <thead class="thead-light">
+        <tr>
+          <th class="u-align-center" scope="col">User Email</th>
+          <th class="u-align-center" scope="col">Scanned At</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+
+    <script>
+      var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {
+        var formData = new FormData();
+        formData.append('qr_code_data', content);
+        
+
+        fetch('{% url "event:validate-qr-code" %}', {
+          method: 'POST',
+          body: formData,
+
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            var scannedData = document.getElementById('scanned-data').getElementsByTagName('tbody')[0];
+            var row = scannedData.insertRow();
+            var emailCell = row.insertCell(0);
+            var scannedAtCell = row.insertCell(1);
+            emailCell.innerHTML = data.user_email;
+            scannedAtCell.innerHTML = data.scanned_at;
+          } else {
+            alert(data.error);
+          }
+        })
+        .catch(error => console.error(error));
+      });
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+
+      function stopScanning() {
+        scanner.stop();
+      }
+    </script>
+  </body>
+</html>
+
+{% endblock %}

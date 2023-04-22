@@ -12,9 +12,11 @@ urlpatterns = [
     path(r'event/<int:pk>/publish',eventViews.PublishEventView.as_view(),name='event-publish'),
     path(r'event/<int:pk>/unpublish',eventViews.UnPublishEventView.as_view(),name='event-unpublish'),
     path('event/<int:pk>/register',eventViews.EventRegistrationView.as_view(),name='event-register'),
-    path('event/history',eventViews.EventHistoryListView.as_view(),name='event-history'),
 
     path('admin/published_events',adminViews.PublishedEventListView.as_view(),name='published_event'),
+    path('event/history',adminViews.EventHistoryListView.as_view(),name='event-history'),
+    path('admin/scan',adminViews.ScanEventsListview.as_view(),name='scan-event'),
+
 
     path('home',endUserViews.EndUserPublishedEventListView.as_view(),name='user-dash'),
     path('home/registeredevents',endUserViews.RegisteredEventsListView.as_view(),name='registered-events'),
@@ -22,8 +24,8 @@ urlpatterns = [
     path(r'home/attended/<int:pk>/certificate',endUserViews.GenerateCertificateView.as_view(),name='generate-cert'),
 
     path('generate/<int:user>/<int:event>/',qrCodeViews.test,name="generate_qr_code"),
-    # path('scan',qrCodeViews.test2,name="test2"),
-    # path('validate',qrCodeViews.scan_qr_code,name="scan_qr_code"),
+    path(r'scan/<int:event_id>',qrCodeViews.scan_qr_code,name="scan-qr-code"),
+    path('validate',qrCodeViews.validate_qr_code,name="validate-qr-code"),
 
     path('admin/report/semester',reportViews.GenerateSemesterBasedReportView.as_view(),name='semester-report'),
     path('admin/report/organizer',reportViews.GenerateOrganizerBasedReportView.as_view(),name='organizer-report'),

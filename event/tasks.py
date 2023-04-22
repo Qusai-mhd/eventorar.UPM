@@ -11,8 +11,8 @@ def send_qr_code(user_id, event_id, qr_code_buffer):
     subject = f"QR code for event {event.event.name}"
     message = 'Please find your QR code attached.'
     from_email = 'eventorar@gmail.com'
-    to = [user.email]
-    # to = ['ad.min11@hotmail.com']
+    #to = [user.email]
+    to = ['ad.min11@hotmail.com']
 
     email = EmailMessage(subject, message, from_email, to)
     email.attach('qr_code.png', qr_code_buffer.getvalue(), 'image/png')

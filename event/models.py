@@ -85,7 +85,7 @@ class RegisteredEvent(models.Model):
 
 class HeldEvent(models.Model):
     published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
-    number_of_attendees=models.PositiveIntegerField(default=None)
+    number_of_attendees=models.PositiveIntegerField(default=0)
     # average_rating=models.DecimalField(max_digits=1,decimal_places=1,default=0,null=True,blank=True)
     def __str__(self):
         return f'{self.published_event.event.name} / {self.published_event.event.semester}'
@@ -94,6 +94,9 @@ class Attendees(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     held_event=models.ForeignKey(HeldEvent,on_delete=models.CASCADE)
     time=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'held_event')
 
     def save(self, *args, **kwargs):
         if not self.held_event:

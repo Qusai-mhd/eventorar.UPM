@@ -99,38 +99,6 @@ class EventsHistoryView(ListView):
 class GenerateCertificateView(View):
     def post(self,request,pk):
         if self.request.method=='POST':
-            # user=self.request.user
-            # print(user)
-            # event=HeldEvent.objects.get(id=pk)
-            # print(event)
-            # #check attendee
-            # attendee=Attendees.objects.filter(user=user,held_event=event)
-            # print(attendee)
-            # if attendee:
-            #         email=user.email
-            #         #first_name=user.first_name
-            #         #last_name=user.last_name
-            #         date=event.published_event.event.date
-
-            #         # Create a new PDF document
-            #         response = HttpResponse(content_type='application/pdf')
-            #         response['Content-Disposition'] = 'inline; filename="certificate.pdf"'
-            #         p = canvas.Canvas(response)
-
-            #         # Add the certificate content
-            #         p.drawString(100, 750, "Certificate of Attendance")
-            #         p.drawString(100, 700, f"This certificate is presented to {user.email} in recognition of their attendance at {event.published_event.event.name} held on {event.published_event.event.date}. This serves as a testament to their commitment to learning and personal development. We congratulate {user.email} on their achievement and wish them continued success in their endeavors. ")
-            #         # p.drawString(100, 700, f"Name: {name}")
-            #         # p.drawString(100, 650, f"Email: {email}")
-            #         # p.drawString(100, 600, f"Event: {event_name}")
-            #         # p.drawString(100, 550, f"Date Attended: {date_attended}")
-            #         # p.drawString(100, 600, f"Date: {date}")
-
-            #         # Close the PDF document
-            #         p.showPage()
-            #         p.save()
-            #         return response
-
             user=self.request.user
             event=HeldEvent.objects.get(id=pk)
             attendee=Attendees.objects.filter(user=user,held_event=event)

@@ -9,7 +9,7 @@ from ..models import PublishedEvent
 class PublishedEventListView(UserPassesTestMixin,ListView):
     model=PublishedEvent
     template_name='adminTemplates/published_events.html'
-    queryset=PublishedEvent.objects.filter()
+    queryset=PublishedEvent.objects.filter(is_held=False)
     context_object_name='events'
     paginate_by=5
     def get_context_data(self, **kwargs):

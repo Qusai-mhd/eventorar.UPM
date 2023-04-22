@@ -1,5 +1,7 @@
 from django import forms
 from .models import HeldEvent
+from django.utils import timezone
+
 
 class PublishEventForm(forms.Form):
     OPTIONS = (
@@ -8,6 +10,16 @@ class PublishEventForm(forms.Form):
         ('f', 'Female')
     )
     Target_audience = forms.ChoiceField(choices=OPTIONS)
+
+    def __init__(self, *args, **kwargs):
+        self.event=kwargs.pop('event')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data=super().clean()
+        if self.event.date<timezone.now().date():
+            raise forms.ValidationError('Event date has already passed.')
+        return cleaned_data
 
 class UnpublishEventForm(forms.Form):
 

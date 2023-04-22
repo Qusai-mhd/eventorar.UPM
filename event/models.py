@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -65,6 +66,7 @@ class PublishedEvent(models.Model):
     target_audience=models.ForeignKey(Group, on_delete=models.CASCADE)
     date_of_publication=models.DateField(auto_now_add=True)
     count=models.IntegerField(default=0)
+    is_held=models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.event.name
@@ -83,7 +85,7 @@ class RegisteredEvent(models.Model):
 
 class HeldEvent(models.Model):
     published_event=models.ForeignKey(PublishedEvent,on_delete=models.CASCADE)
-    number_of_attendees=models.PositiveIntegerField()
+    number_of_attendees=models.PositiveIntegerField(default=None)
     # average_rating=models.DecimalField(max_digits=1,decimal_places=1,default=0,null=True,blank=True)
     def __str__(self):
         return f'{self.published_event.event.name} / {self.published_event.event.semester}'
@@ -92,6 +94,11 @@ class Attendees(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     held_event=models.ForeignKey(HeldEvent,on_delete=models.CASCADE)
     time=models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.held_event:
+            raise ValidationError('Cannot save Attendees without a HeldEvent.')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user} / {self.held_event.published_event.event.name}'

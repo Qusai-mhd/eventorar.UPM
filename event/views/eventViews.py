@@ -95,6 +95,11 @@ class PublishEventView(UserPassesTestMixin,FormView):
         context['event'] = self.get_event()
         return context
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['event'] = self.get_event()
+        return kwargs
+    
     def form_valid(self, form):
         target_audience = form.cleaned_data['Target_audience']
         event = self.get_event()

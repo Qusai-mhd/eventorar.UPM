@@ -6,7 +6,6 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-from reportlab.pdfgen import canvas
 from django.http import HttpResponse,HttpResponseBadRequest
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -39,10 +38,12 @@ class EndUserPublishedEventListView(ListView):
         user=self.request.user
         group_ids=user.groups.values_list('id',flat=True)
         registered_event_ids = RegisteredEvent.objects.filter(user=user).values_list('published_event__event_id', flat=True)
+        attended_event_ids=Attendees.objects.filter(user=user).values_list('held_event__published_event__event_id',flat=True)
         return PublishedEvent.objects.filter(
             Q(target_audience__id__in=group_ids) &
             Q(event__date__gte=today) & 
-            ~Q(event_id__in=registered_event_ids))
+            ~Q(event_id__in=registered_event_ids)&
+            ~Q(event_id__in=attended_event_ids))
     
 @method_decorator(login_required(login_url='authentication:login'),name="dispatch")
 class RegisteredEventsListView(ListView):

@@ -9,16 +9,14 @@ from .models import PublishedEvent, HeldEvent,Attendees
 
 @receiver(post_save, sender=PublishedEvent)
 def create_held_event_if_time_passed(sender, instance, created, **kwargs):
-    if created:
-        return  # ignore updates to existing PublishedEvent instances
-
-    for published_event in PublishedEvent.objects.filter(is_held=False):
-        if published_event.event.date < timezone.now().date():
-            # check if a HeldEvent instance already exists for this published event
-            if not HeldEvent.objects.filter(published_event=published_event).exists():
-                HeldEvent.objects.create(published_event=published_event, number_of_attendees=0)
-                published_event.is_held=True
-                published_event.save()
+    if created: 
+        for published_event in PublishedEvent.objects.filter(is_held=False):
+            if published_event.event.date < timezone.now().date():
+                # check if a HeldEvent instance already exists for this published event
+                if not HeldEvent.objects.filter(published_event=published_event).exists():
+                    HeldEvent.objects.create(published_event=published_event, number_of_attendees=0)
+                    published_event.is_held=True
+                    published_event.save()
 
 
 @receiver(post_save, sender=Attendees)

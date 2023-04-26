@@ -72,4 +72,13 @@
           
         </div>
     </section>
+
+    <script type="text/javascript">
+        window.addEventListener('pageshow', function(event) {
+          // Reload the page when the user navigates back to it
+          if (event.persisted) {
+            window.location.reload();
+          }
+        });
+                  </script>
 {% endblock %}

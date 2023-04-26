@@ -19,6 +19,15 @@
         <input style="height:50px;width:100px; font-weight:bold; font-size:100%;" type="submit" value="submit">
     </form>
     
+
+    <script type="text/javascript">
+        window.addEventListener('pageshow', function(event) {
+          // Reload the page when the user navigates back to it
+          if (event.persisted) {
+            window.location.reload();
+          }
+        });
+                  </script>
 </html>
 </div>
 {% endblock %}

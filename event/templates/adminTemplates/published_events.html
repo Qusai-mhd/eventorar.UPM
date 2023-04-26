@@ -1,6 +1,10 @@
 {% extends "eventTemplates/crud/base.html" %}
-
+<head> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head> 
 {% block container %}
+
 <h1 class="u-align-center u-text u-title u-text-1">Published Events<span style="font-size: 1.875rem;"></span>
 </h1>
 
@@ -23,7 +27,8 @@
                   <div>
                     <a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.event.id %}">{{event.event.name}}</a>
                     <br>
-                    <i style="font-size:medium;">&#xf2bd;{{event.count}}</i>
+                    
+                    <i class="fa" style="font-size:25px; color:grey;">&#xf2bd; {{event.count}}</i>
                   </div>
                 </td> 
                 <td>{{event.date_of_publication}}</td>
@@ -41,7 +46,8 @@
                     <div>
                         <form method="post" action="{% url 'event:registrants-list' pk=event.id %}" target="_blank">
                             {% csrf_token %}
-                        <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Registrants</button>
+                            <br>
+                        <button style="background:lightgrey; color: RebeccaPurple; border:none;" class="u-radius-50">Registrants</button>
                         </form>
                     </div>
                 </td>
@@ -53,5 +59,10 @@
 {% if is_paginated %}
     {% include "eventTemplates/crud/pagination.html" %}
 {% endif %}
+{% comment %} <script type="text/javascript">
+    setTimeout(function () {
+      location.reload();
+    }, 5000);
+  </script> {% endcomment %}
 
 {% endblock %}

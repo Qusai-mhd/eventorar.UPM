@@ -51,5 +51,10 @@
 {% if is_paginated %}
     {% include "eventTemplates/crud/pagination.html" %}
 {% endif %}
+{% comment %} <script type="text/javascript">
+    setTimeout(function () {
+      location.reload();
+    }, 5000);
+  </script> {% endcomment %}
 
 {% endblock %}

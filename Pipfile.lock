@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b36d2731178356143a365243376acfe05f63f3441872ddde3a74e881c03ae414"
+            "sha256": "bec466bd1aef3d72f97071b6d6dfff763312c4f0345564c141927f484f639799"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -538,6 +538,16 @@
                 "sha256:a5220780a404dbe3353789870978e472cfe477761f06ee55077256e509b156d0"
             ],
             "version": "==0.2.6"
+        },
+        "wkhtmltopdf": {
+            "hashes": [
+                "sha256:530fffb5d1faf4f4cd5248c14fd1b4b7fe311541d0660dc2c2272c32b3c72211",
+                "sha256:60c84c327f949a256c6c0752a0a5d8a63daa08d6158f650d6379be9aaa536a94",
+                "sha256:eea6f42dccf58ded01980ae77e52017230db06b508e69fdb4f57c91054f543e0",
+                "sha256:f14972abdecf5ddb6e397e7b4910dad31516c0e146145753ce18144ba73be1a1"
+            ],
+            "index": "pypi",
+            "version": "==0.2"
         }
     },
     "develop": {}

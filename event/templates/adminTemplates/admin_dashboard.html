@@ -21,8 +21,8 @@
               <tbody>
         {% for event in events %}
                   <tr>
-                      <td ><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.id %}">{{event.name}}</a></td>
-                      <td>{{event.date}}</td>
+                      <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 120%;"><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.id %}">{{event.name}}</a></td>
+                      <td style="vertical-align: middle; text-align: center; font-weight: bold;">{{event.date}}</td>
                       <td>
                           <div>
                             {% if event.is_published %}
@@ -101,6 +101,11 @@
       }
       </script>
         <br> 
-    
+        {% comment %} <script type="text/javascript">
+            setTimeout(function () {
+              location.reload();
+            }, 5000);
+          </script>
+     {% endcomment %}
 
 {% endblock %}

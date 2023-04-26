@@ -8,12 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repoort Type</title>
 </head>
-<body>
-    <h3>Select Report Type</h3>
+<div class="card u-align-center">
+    <div class="card-header">
+        <h5 class="card-title" style="font-size:190%; color:RebeccaPurple;">Select Report Type</h5>
+    </div>
+    <div class="card-body">
     <br>
-      <div style="display: inline-block; margin-right: 50px;"><a href="{% url 'event:semester-report' %}"><button>Generate Semester Report</button></a></div>
-      <div style="display: inline-block; margin-right: 50px;"><a href="{% url 'event:organizer-report' %}"><button>Generate Organizer Report</button></a></div>
-                  
+      <div style="display: inline-block; margin-right: 50px;"><a href="{% url 'event:semester-report' %}"><button style="height:50px;width:400px; font-weight:bold; font-size:150%; background: RebeccaPurple; color: white;">Generate Semester Report</button></a></div><br><br><br> 
+      <div style="display: inline-block; margin-right: 50px;"><a href="{% url 'event:organizer-report' %}"><button style="height:50px;width:400px; font-weight:bold; font-size:150%; background: RebeccaPurple; color: white;">Generate Organizer Report</button></a></div>
+       
 </body>
+<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+</div>  
 </html>
 {% endblock %}

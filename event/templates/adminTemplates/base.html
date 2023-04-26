@@ -24,75 +24,76 @@
     <meta property="og:title" content="Admin">
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body class="u-body u-xl-mode" data-lang="en"><header class=" u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top u-clearfix u-header u-section-row-container" id="sec-8c91" style=""><div class="u-section-rows">
-        <div class="u-black u-section-row u-section-row-1" id="sec-2d61">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <form action="#" method="get" class="u-border-1 u-border-grey-30 u-grey-60 u-search u-search-left u-search-1">
-              <button class="u-search-button" type="submit">
-                <span class="u-search-icon u-spacing-10">
-                  <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 56.966 56.966"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-f1e6"></use></svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg-f1e6" x="0px" y="0px" viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve" class="u-svg-content"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
-                </span>
-              </button>
-              <input type="text" id="myInput" onkeyup="myFunction()" class="u-search-input" type="search" name="search" value="" placeholder="Search">
-            </form>
-            <h1 class="u-custom-font u-text u-text-default u-text-1">EVENTORAR</h1>
-            <a href="{% url 'auth:logout' %}" class="u-border-2 u-border-hover-palette-1-dark-1 u-border-white u-btn u-btn-round u-button-style u-none u-radius-50 u-text-palette-2-base u-btn-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'img/3596092-c27cace3.png' %}" alt=""></span>
-            </a>
+  
+  <body class="u-body u-xl-mode" data-lang="en">
+    
+    <header class=" u-border-no-bottom u-border-no-left u-border-no-right u-border-no-top u-clearfix u-header u-section-row-container" id="sec-8c91" style=""><div class="u-section-rows">
+      <div class="u-black u-section-row u-section-row-1" id="sec-2d61">
+        <div class="u-clearfix u-sheet u-sheet-1" >
+        <br>
+        <a href="{%  url 'event:admin-dash' %}"><img style="display: inline-block; width:70px; height:70px;" src="{% static 'img/2549900-ab28a752.png' %}" alt=""></a> 
+            <h2 style="display: inline-block;" class="u-custom-font u-text u-text-default u-text-1" >&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; EVENTORAR</h2>
+            <a href="{% url 'auth:logout' %}" class="u-border-2 u-border-hover-palette-1-dark-1 u-border-white u-btn u-btn-round u-button-style u-none u-radius-50 u-text-palette-2-base u-btn-1" ><span class="u-file-icon u-icon u-text-white u-icon-2"><img src="{% static 'img/3596092-c27cace3.png' %}" alt=""></span></a>
+           
+       
+          
           </div>
           
           
+        </div> 
           
           
-          
-        </div>
+        </div> </div>
+        
         <div class="u-clearfix u-grey-75 u-section-row u-sticky u-sticky-51e4" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="" id="sec-b16d">
           
-          
-          
-          
-          
-          <div class="u-clearfix u-sheet u-sheet-2">
-            <div class="u-align-left u-expanded-width u-list u-list-1">
-              <div class="u-repeater u-repeater-1">
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1">
-                  <div class="u-container-layout u-similar-container u-container-layout-1">
-                    <a href="{%  url 'event:admin-dash' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-2"><span class="u-file-icon u-icon u-text-white u-icon-2"><img src="{% static 'img/2549900-ab28a752.png' %}" alt=""></span>
-                    </a>
-                  </div>
+            
+          <div class="u-clearfix u-sheet u-valign-middle u-sheet-2">
+            
+          <div class="u-align-left u-list u-list-1">
+            
+            <div class="u-repeater u-repeater-1">
+              
+             
+              <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1">
+                <div class="u-container-layout u-similar-container u-container-layout-1">
+                  <a href="{% url 'event:event-create' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-1-light-1 u-btn-2"> &nbsp;Create Event</a>
                 </div>
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-2">
-                  <div class="u-container-layout u-similar-container u-container-layout-2">
-                    <a href="{% url 'event:event-create' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-3"> &nbsp;Create Event</a>
-                  </div>
+              </div>
+              <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-2">
+                <div class="u-container-layout u-similar-container u-container-layout-2">
+                  <a href="{% url 'event:published_event' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-1-light-1 u-btn-3"> &nbsp;Published Events</a>
                 </div>
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-3">
-                  <div class="u-container-layout u-similar-container u-container-layout-3">
-                    <a href="{% url 'event:published_event' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-4"> &nbsp;Published Events</a>
-                  </div>
+              </div>
+              <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-3">
+                <div class="u-container-layout u-similar-container u-container-layout-3">
+                  <a href="{% url 'event:scan-event' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-1-light-1 u-btn-4"> &nbsp;Scan QR Code</a>
                 </div>
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-4">
-                  <div class="u-container-layout u-similar-container u-container-layout-4">
-                    <a href="{% url 'event:scan-event' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-5"> &nbsp;Scan QR Code</a>
-                  </div>
+              </div>
+              <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-4">
+                <div class="u-container-layout u-similar-container u-container-layout-4">
+                  <a href="{% url 'event:event-history' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-1-light-1 u-btn-5">History</a>
                 </div>
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-5">
-                  <div class="u-container-layout u-similar-container u-container-layout-5">
-                    <a href="{% url 'event:event-history' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-6"> &nbsp;History</a>
-                  </div>
+              </div>
+              <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-5">
+                <div class="u-container-layout u-similar-container u-container-layout-5">
+                  <a href="{% url 'event:report' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-1-light-1 u-btn-6">Reports</a>
                 </div>
-
-                <div class="u-border-3 u-border-grey-75 u-container-style u-custom-item u-list-item u-repeater-item u-list-item-5">
-                  <div class="u-container-layout u-similar-container u-container-layout-5">
-                    <a href="{% url 'event:report' %}" class="u-align-center u-border-active-palette-2-dark-1 u-border-hover-palette-2-base u-btn u-button-style u-custom-font u-custom-item u-font-georgia u-none u-text-body-alt-color u-text-hover-palette-2-base u-btn-6"> &nbsp;Reports</a>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
-        </div>
-      </div></header> 
+          </div>
+          </div>
+          </div></header> 
+          <form action="#" method="get" class="u-border-1 u-border-grey-30 u-grey-60 u-search u-search-left u-search-1">
+            <button class="u-search-button" type="submit">
+              <span class="u-search-icon u-spacing-10">
+                <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 56.966 56.966"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-f1e6"></use></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg-f1e6" x="0px" y="0px" viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve" class="u-svg-content"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg>
+              </span>
+            </button>
+            <input type="text" id="myInput" onkeyup="myFunction()" class="u-search-input" type="search" name="search" value="" placeholder="Search Created Events">
+          </form> 
 {% endblock %}
 
       {% block container %}

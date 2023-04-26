@@ -80,27 +80,27 @@ WSGI_APPLICATION = 'Eventorar.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eventorar',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
-        'PORT':'3306',
-    }
-}
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bd2gghjmsxdjhsaalruq',
-#         'HOST': 'bd2gghjmsxdjhsaalruq-mysql.services.clever-cloud.com',
-#         'USER': 'uwqk25hpyivbvxyy',
-#         'PASSWORD': 'cVxEc8G7rT2fhoDIABZY',
+#         'NAME': 'eventorar',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': '',
 #         'PORT':'3306',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bd2gghjmsxdjhsaalruq',
+        'HOST': 'bd2gghjmsxdjhsaalruq-mysql.services.clever-cloud.com',
+        'USER': 'uwqk25hpyivbvxyy',
+        'PASSWORD': 'cVxEc8G7rT2fhoDIABZY',
+        'PORT':'3306',
+    }
+}
 
 MAILJET_API_KEY ='a65adf0e9cca920b641f1be4b970942b'
 MAILJET_API_SECRET ='f794fe9f60febe1155b252e6caf03c69'

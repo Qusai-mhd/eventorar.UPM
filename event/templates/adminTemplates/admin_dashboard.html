@@ -21,8 +21,8 @@
               <tbody>
         {% for event in events %}
                   <tr>
-                      <td ><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.id %}">{{event.name}}</a></td>
-                      <td>{{event.date}}</td>
+                      <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 120%;"><a style="color: RebeccaPurple;" href="{% url 'event:event-detail' pk=event.id %}">{{event.name}}</a></td>
+                      <td style="vertical-align: middle; text-align: center; font-weight: bold;">{{event.date}}</td>
                       <td>
                           <div>
                             {% if event.is_published %}
@@ -101,6 +101,13 @@
       }
       </script>
         <br> 
-    
+        <script type="text/javascript">
+window.addEventListener('pageshow', function(event) {
+  // Reload the page when the user navigates back to it
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
+          </script>
 
 {% endblock %}

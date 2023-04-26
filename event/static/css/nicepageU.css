@@ -4,7 +4,7 @@
  * Copyright 2014-2021 Froala Labs
  */
 
-.fr-clearfix::after {
+ .fr-clearfix::after {
   clear: both;
   display: block;
   content: "";
@@ -41171,27 +41171,20 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-btn-1 {
   border-style: solid;
-  margin: -47px -44px 0 auto;
+  margin: -47px -44px 9px auto;
   padding: 0 8px;
 }
 
 .u-header .u-icon-1 {
   font-size: 1.5em;
 }
-
-.u-header .u-search-1 {
-  height: auto;
-  width: 316px;
-  min-height: 38px;
-  margin: -40px 35px 11px auto;
-}
 .u-header .u-sheet-2 {
-  min-height: 125px;
+  min-height: 83px;
 }
 
 .u-header .u-list-1 {
-  margin-top: 29px;
-  margin-bottom: 31px;
+  margin-top: 10px;
+  margin-bottom: 8px;
 }
 
 .u-header .u-repeater-1 {
@@ -41202,6 +41195,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-list-item-1 {
   box-shadow: -2px 0px 8px 0px rgba(128,128,128,1);
+  background-image: linear-gradient(black, #858e99);
 }
 
 .u-header .u-container-layout-1 {
@@ -41225,6 +41219,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-list-item-2 {
   box-shadow: -2px 0px 8px 0px rgba(128,128,128,1);
+  background-image: linear-gradient(black, #858e99);
 }
 
 .u-header .u-container-layout-2 {
@@ -41240,6 +41235,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-list-item-3 {
   box-shadow: -2px 0px 8px 0px rgba(128,128,128,1);
+  background-image: linear-gradient(black, #858e99);
 }
 
 .u-header .u-container-layout-3 {
@@ -41255,6 +41251,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-list-item-4 {
   box-shadow: -2px 0px 8px 0px rgba(128,128,128,1);
+  background-image: linear-gradient(black, #858e99);
 }
 
 .u-header .u-container-layout-4 {
@@ -41270,6 +41267,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 .u-header .u-list-item-5 {
   box-shadow: -2px 0px 8px 0px rgba(128,128,128,1);
+  background-image: linear-gradient(black, #858e99);
 }
 
 .u-header .u-container-layout-5 {
@@ -41285,11 +41283,6 @@ a.u-link.u-text-hover-grey-90:hover {
 @media (max-width: 1199px) {
   .u-header .u-btn-1 {
     margin-right: 0;
-  }
-
-  .u-header .u-search-1 {
-    width: 316px;
-    margin-right: 35px;
   }
 }
 @media (max-width: 1199px) {
@@ -41343,10 +41336,6 @@ a.u-link.u-text-hover-grey-90:hover {
 @media (max-width: 575px) {
   .u-header .u-text-1 {
     font-size: 2.25rem;
-  }
-
-  .u-header .u-search-1 {
-    margin-right: 24px;
   }
 }
 @media (max-width: 575px) {

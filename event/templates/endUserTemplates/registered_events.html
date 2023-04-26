@@ -1,27 +1,57 @@
 {% extends "endUserTemplates/base.html" %}
 
 {% block container %}
-<table class="table">
-    <tr>
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Event Title</th>
-                <th scope="col">Date</th>
-                <th scope="col">Date of Registration</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in registered_events %}
-            <tr>
-                <td><a href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a></td>
-                <td>{{event.published_event.event.date}}</td>
-                <td>{{event.published_event.date_of_publication}}</td>
-            </tr>
-             {% endfor %}
-        </tbody>
-</table>
-{% if is_paginated %}
+{{ block.super }}
+
+<style>
+    table {
+      border-collapse: collapse;
+      border: 1px solid #bbb;
+      background-color: rgba(245, 245, 245, 0.8);
+      margin: 20px auto;
+    }
+    td, th {
+      padding: 20px;
+      border: 1px solid #bbb;
+    }
+    .card {
+      margin-top: 40px;
+      margin-bottom: 600px;
+    }
+  </style>
+  
+
+<div class="card u-align-center">
+  <table class="table" style="font-size: 20px;">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Event Title</th>
+        <th scope="col">Date</th>
+        <th scope="col">Date of Registration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in registered_events %}
+      <tr>
+        <td><a href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a></td>
+        <td>{{event.published_event.event.date}}</td>
+        <td>{{event.published_event.date_of_publication}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if is_paginated %}
     {% include "eventTemplates/crud/pagination.html" %}
-{% endif %}
+  {% endif %}
+</div>
+
+<script type="text/javascript">
+  window.addEventListener('pageshow', function(event) {
+    // Reload the page when the user navigates back to it
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+            </script>
 
 {% endblock %}

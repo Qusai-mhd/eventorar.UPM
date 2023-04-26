@@ -57,8 +57,8 @@ footer {
   }
   
   input[type="email"], input[type="password"] {
-    border: none;
-    background-color: #f9f9f9;
+    border: 3px solid black;
+    background-color: lightgrey;
     padding: 10px;
     border-radius: 5px;
     width: 100%;

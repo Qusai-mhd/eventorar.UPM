@@ -1,36 +1,67 @@
 {% extends "endUserTemplates/base.html" %}
 
+
+
 {% block container %}
-<table class="table">
-    <tr>
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Event Title</th>
-                <th scope="col">Date</th>
-                <th scope="col">Organizer</th>
-                <th scope="col">Description</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in attended_events %}
-            <tr>
-                <td><a href="{% url 'event:event-detail' pk=event.held_event.published_event.event.id %}">{{event.held_event.published_event.event.name}}</a></td>
-                <td>{{event.held_event.published_event.event.date}}</td>
-                <td>{{event.held_event.published_event.event.organizer}}</td>
-                <td>{{event.held_event.published_event.event.description}}</td>
-                <td>
-                    <form method="post" action="{% url 'event:generate-cert' pk=event.held_event.id %}" target="_blank">
-                        {% csrf_token %}
+<style>
+    table {
+      border-collapse: collapse;
+      border: 1px solid #bbb;
+      background-color: rgba(245, 245, 245, 0.8);
+      margin: 20px auto;
+    }
+    td, th {
+      padding: 20px;
+      border: 1px solid #bbb;
+    }
+    .card {
+      margin-top: 50px;
+      margin-bottom: 570px;
+    }
+  </style>
+  
+<div class="card u-align-center">
+<table class="table" style="font-size: 20px; margin: 0 auto;">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Event Title</th>
+            <th scope="col">Date</th>
+            <th scope="col">Organizer</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th> 
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in attended_events %}
+        <tr>
+            <td><a href="{% url 'event:event-detail' pk=event.held_event.published_event.event.id %}">{{event.held_event.published_event.event.name}}</a></td>
+            <td>{{event.held_event.published_event.event.date}}</td>
+            <td>{{event.held_event.published_event.event.organizer}}</td>
+            <td>{{event.held_event.published_event.event.description}}</td>
+            <td>
+                <form method="post" action="{% url 'event:generate-cert' pk=event.held_event.id %}" target="_blank">
+                    {% csrf_token %}
                     <button class="u-align-center u-border-none u-btn u-btn-round u-button-style u-hover-palette-1-base u-palette-1-base u-radius-50 u-text-body-alt-color u-text-hover-palette-3-base u-btn-2">Certificate</button>
-                    </form>
-                </td>
-            </tr>
-             {% endfor %}
-        </tbody>
+                </form>
+            </td>
+        </tr>
+         {% endfor %}
+    </tbody>
 </table>
 {% if is_paginated %}
     {% include "eventTemplates/crud/pagination.html" %}
 {% endif %}
+</div> 
+
+<script type="text/javascript">
+  window.addEventListener('pageshow', function(event) {
+    // Reload the page when the user navigates back to it
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+            </script>
 
 {% endblock %}
+
+

@@ -2,10 +2,14 @@
 {% load static %}
 {% block container %}
 {% if messages %}
+<div style="margin-top: 50px; margin-bottom: 600px;">
+<div class="message-container" style="background-color: lightgrey; font-weight: bold; color: red; text-align: center; padding: 10px;">
 <ul class="messages">
     {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
     {% endfor %}
+</div>
 </ul>
 {% endif %}
+</div>
 {% endblock %}

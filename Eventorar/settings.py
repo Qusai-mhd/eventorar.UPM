@@ -29,8 +29,7 @@ SECRET_KEY = 'django-insecure-aa9a8fv^_-b)@_dtd#(xn7+g%*b9t(zg)e8^aku3&)z-r7-8y#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['django-call-graph.azurewebsites.net', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -61,7 +60,7 @@ ROOT_URLCONF = 'Eventorar.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'authentication/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'authentication.context_processors.context'
             ],
         },
     },
@@ -76,18 +76,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eventorar.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sq',
+#         'NAME': 'eventorar',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'PORT':'3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eventorar',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
-        'PORT':'3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3'
     }
 }
 
@@ -132,7 +138,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -144,11 +149,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
-  os.path.join(BASE_DIR, 'event/static/'),
+    os.path.join(BASE_DIR, 'event/static/'),
+    os.path.join(BASE_DIR, 'authentication/static/'),
 )
 
 # Default primary key field type
@@ -172,7 +177,6 @@ AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 # Set the secret key used for encrypting and decrypting the QR code data
 QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
 
-
 # Celery settings
 
 # set the celery broker url
@@ -181,3 +185,11 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 # set the celery timezone
 CELERY_TIMEZONE = 'UTC'
+
+from ms_identity_web.configuration import AADConfig
+from ms_identity_web import IdentityWebPython
+
+AAD_CONFIG = AADConfig.parse_json(file_path='aad.config.json')
+MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
+ERROR_TEMPLATE = 'auth/{}.html'  # for rendering 401 or other errors from msal_middleware
+MIDDLEWARE.append('ms_identity_web.django.middleware.MsalMiddleware')

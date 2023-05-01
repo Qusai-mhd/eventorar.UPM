@@ -190,6 +190,11 @@ from ms_identity_web.configuration import AADConfig
 from ms_identity_web import IdentityWebPython
 
 AAD_CONFIG = AADConfig.parse_json(file_path='aad.config.json')
+
+AAD_CONFIG.client.client_id = os.environ['client_id']
+AAD_CONFIG.client.client_credential = os.environ['client_credential']
+AAD_CONFIG.client.authority = os.environ['authority']
+
 MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
 ERROR_TEMPLATE = 'auth/{}.html'  # for rendering 401 or other errors from msal_middleware
 MIDDLEWARE.append('ms_identity_web.django.middleware.MsalMiddleware')

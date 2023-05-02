@@ -118,13 +118,17 @@ class PublishEventView(UserPassesTestMixin,FormView):
         target_audience = form.cleaned_data['Target_audience']
         event = self.get_event()
         try:
-            with transaction.atomic():
+            with transaction.atomic(): 
                 if target_audience == 'all':
-                    return self.publish(event,"All")
-                elif target_audience == 'm':
-                    return self.publish(event,"Male")
-                elif target_audience == 'f':
-                    return self.publish(event,"Female")
+                    return self.publish(event,"All Colleges")
+                elif target_audience == 'cs':
+                    return self.publish(event,"College Of Computer and Cyber Sciences")
+                elif target_audience == 'eng':
+                    return self.publish(event,"College Of Engineering")
+                elif target_audience == 'bu':
+                    return self.publish(event,'College Of Business Administration')
+                elif target_audience == 'prep':
+                    return self.publish(event,'Prep Year')
                 return render(self.request, 'eventTemplates/publishEvent/publishToAll.html')
         except:
             messages.error(self.request,'Somthing went wrong during publishing the event')
@@ -177,6 +181,7 @@ class EventRegistrationView(View):
         published_event=PublishedEvent.objects.get(id=pk)
         user_id=user.id
         published_event_id=published_event.id
+        #Todo: Check if the event target_audience is in the user groups
         try:
             with transaction.atomic():
                 qr_code_buffer=generate_qr_code(request,event_id=published_event_id,user_id=user_id)

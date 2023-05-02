@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
@@ -13,7 +12,13 @@ from ..forms import PublishEventForm,UnpublishEventForm
 from .qrCodeViews import generate_qr_code
 from event.tasks import send_qr_code
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
 
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventListView(UserPassesTestMixin,ListView):
     model=Event
     template_name='adminTemplates/admin_dashboard.html'
@@ -35,8 +40,11 @@ class EventListView(UserPassesTestMixin,ListView):
         return context
     
     def test_func(self):
-        return self.request.user.is_superuser
-    
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventCreateView(UserPassesTestMixin,CreateView):
     model=Event
     template_name='eventTemplates/crud/createEvent.html'
@@ -47,16 +55,18 @@ class EventCreateView(UserPassesTestMixin,CreateView):
         return reverse_lazy('event:event-detail',kwargs={'pk':self.object.id})
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
 
-@method_decorator(login_required(login_url='authentication:login'), name='dispatch')
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventDetailView(DetailView):
     model=Event
     template_name='eventTemplates/crud/detail.html'
     context_object_name='event'
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventUpdateView(UserPassesTestMixin,UpdateView):
     model=Event
     template_name='eventTemplates/crud/update.html'
@@ -68,9 +78,11 @@ class EventUpdateView(UserPassesTestMixin,UpdateView):
         return reverse_lazy('event:event-detail',kwargs={'pk': self.object.id})
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventDeleteView(UserPassesTestMixin,DeleteView):
     model=Event
     template_name='eventTemplates/crud/delete.html'
@@ -79,9 +91,11 @@ class EventDeleteView(UserPassesTestMixin,DeleteView):
     success_url=reverse_lazy('event:admin-dash')
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class PublishEventView(UserPassesTestMixin,FormView):
     template_name='eventTemplates/publishEvent/publish_event.html'
     form_class=PublishEventForm
@@ -125,9 +139,11 @@ class PublishEventView(UserPassesTestMixin,FormView):
             return redirect(reverse('event:event-detail', kwargs={'pk': event.id}))
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class UnPublishEventView(UserPassesTestMixin,FormView):
     model=PublishedEvent
     template_name='eventTemplates/publishEvent/unpublish_event.html'
@@ -150,12 +166,14 @@ class UnPublishEventView(UserPassesTestMixin,FormView):
         return super().form_valid(form)
 
     def test_func(self):
-        return self.request.user.is_superuser
-    
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch")   
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class EventRegistrationView(View):
     def post(self,request, pk):
-        user=self.request.user
+        user=get_MSAL_user(self.request, ms_identity_web)
         published_event=PublishedEvent.objects.get(id=pk)
         user_id=user.id
         published_event_id=published_event.id
@@ -178,4 +196,3 @@ class EventRegistrationView(View):
         except:
             messages.error(self.request,"Can't register for this event! Try again or contact the registrar")
             return render(self.request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
-        

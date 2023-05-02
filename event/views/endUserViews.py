@@ -1,9 +1,7 @@
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView,View
 from ..models import PublishedEvent,RegisteredEvent,Attendees,HeldEvent
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponse,HttpResponseBadRequest
@@ -11,8 +9,13 @@ from django.shortcuts import render
 from django.template.loader import get_template
 import pdfkit
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
 
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch")
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class EndUserPublishedEventListView(ListView):
     model=PublishedEvent
     template_name='endUserTemplates/enduserdash.html'
@@ -35,7 +38,7 @@ class EndUserPublishedEventListView(ListView):
     
     def get_queryset(self):
         today=timezone.now().date()
-        user=self.request.user
+        user = get_MSAL_user(self.request, ms_identity_web)
         group_ids=user.groups.values_list('id',flat=True)
         registered_event_ids = RegisteredEvent.objects.filter(user=user).values_list('published_event__event_id', flat=True)
         attended_event_ids=Attendees.objects.filter(user=user).values_list('held_event__published_event__event_id',flat=True)
@@ -44,8 +47,9 @@ class EndUserPublishedEventListView(ListView):
             Q(event__date__gte=today) & 
             ~Q(event_id__in=registered_event_ids)&
             ~Q(event_id__in=attended_event_ids))
-    
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch")
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class RegisteredEventsListView(ListView):
     model=RegisteredEvent
     template_name='endUserTemplates/registered_events.html'
@@ -53,7 +57,7 @@ class RegisteredEventsListView(ListView):
     paginate_by=5
 
     def get_queryset(self):
-        user=self.request.user
+        user = get_MSAL_user(self.request, ms_identity_web)
         return RegisteredEvent.objects.filter(user=user).order_by('date_of_registration')
     
     def get_context_data(self, **kwargs):
@@ -71,14 +75,14 @@ class RegisteredEventsListView(ListView):
         return context
     
 
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch") 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class EventsHistoryView(ListView):
     model=Attendees
     template_name='endUserTemplates/user_history.html'
     paginate_by=5
 
     def get_queryset(self):
-        user=self.request.user
+        user=get_MSAL_user(self.request, ms_identity_web)
         return Attendees.objects.filter(user=user).order_by('held_event__published_event__event__date')
     
     def get_context_data(self, **kwargs):
@@ -96,11 +100,11 @@ class EventsHistoryView(ListView):
         return context
     
     
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch") 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateCertificateView(View):
     def post(self,request,pk):
         if self.request.method=='POST':
-            user=self.request.user
+            user=get_MSAL_user(self.request, ms_identity_web)
             event=HeldEvent.objects.get(id=pk)
             attendee=Attendees.objects.filter(user=user,held_event=event)
             if attendee:
@@ -122,6 +126,3 @@ class GenerateCertificateView(View):
             
         else: 
             return HttpResponseBadRequest("Invalid request method")
-
-    
-            

@@ -10,13 +10,22 @@ from datetime import datetime
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
+
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateReportView(UserPassesTestMixin,TemplateView):
     template_name='reportTemplates/select_report_type.html'
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
     PAGE_MARGIN = {
@@ -60,7 +69,7 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
             total_males = sum(event.num_males for event in events)
             total_females = sum(event.num_females for event in events)
 
-            user=self.request.user
+            user=get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             context = {
@@ -88,9 +97,11 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
             return response
 
     def test_func(self):
-        return self.request.user.is_superuser
-        
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
     PAGE_MARGIN = {
@@ -135,7 +146,7 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
             total_males = sum(event.num_males for event in events)
             total_females = sum(event.num_females for event in events)
 
-            user=self.request.user
+            user = get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             context = {
@@ -163,9 +174,11 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
             return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class GenerateEventBasedReport(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -201,7 +214,7 @@ class GenerateEventBasedReport(UserPassesTestMixin,View):
                     .select_related('published_event__event')\
                     .first()
         
-        user=self.request.user
+        user=get_MSAL_user(self.request, ms_identity_web)
         time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         context = {
@@ -225,9 +238,11 @@ class GenerateEventBasedReport(UserPassesTestMixin,View):
         return response  
 
     def test_func(self):
-        return self.request.user.is_superuser
-    
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class AttendeesListView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -282,9 +297,11 @@ class AttendeesListView(UserPassesTestMixin,View):
         return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
-    
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class RegistrantsListView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -339,4 +356,5 @@ class RegistrantsListView(UserPassesTestMixin,View):
         return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser

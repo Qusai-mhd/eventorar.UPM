@@ -11,7 +11,7 @@ def acquireUserDetails(identity):
     return json.loads(results)
 
 
-def get_user_from_db(request, identity):
+def get_MSAL_user(request, identity):
 
     try:  # Try look for the user in the DB
         uid = request.identity_context_data._id_token_claims['oid']

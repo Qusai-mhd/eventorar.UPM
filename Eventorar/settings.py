@@ -108,8 +108,8 @@ DATABASES = {
 #     }
 # }
 
-MAILJET_API_KEY ='a65adf0e9cca920b641f1be4b970942b'
-MAILJET_API_SECRET ='f794fe9f60febe1155b252e6caf03c69'
+MAILJET_API_KEY = os.environ['mailjet_api_key']
+MAILJET_API_SECRET =os.environ['mailjet_api_secret']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'in-v3.mailjet.com'
 EMAIL_PORT = 587
@@ -163,7 +163,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL='authentication.CustomUser'
 
-AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
+# AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 
 
 #LOGIN_REDIRECT_URL = 'eventorar/event'
@@ -175,8 +175,8 @@ AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 # QR_CODE_URL = '/media/qr_codes/'
 
 # Set the secret key used for encrypting and decrypting the QR code data
-QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
-
+# QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
+QR_CODE_KEY=os.environ['qr_code_key']
 # Celery settings
 
 # set the celery broker url

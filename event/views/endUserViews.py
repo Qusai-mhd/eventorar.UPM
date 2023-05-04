@@ -5,10 +5,10 @@ from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.http import HttpResponse,HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.template.loader import get_template
 import pdfkit
-
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.conf import settings
 from authentication.utilities import get_MSAL_user
 
@@ -16,7 +16,7 @@ ms_identity_web = settings.MS_IDENTITY_WEB
 
 
 @method_decorator(ms_identity_web.login_required,name="dispatch")
-class EndUserPublishedEventListView(ListView):
+class EndUserPublishedEventListView(UserPassesTestMixin,ListView):
     model=PublishedEvent
     template_name='endUserTemplates/enduserdash.html'
     context_object_name='events'
@@ -47,10 +47,17 @@ class EndUserPublishedEventListView(ListView):
             Q(event__date__gte=today) & 
             ~Q(event_id__in=registered_event_ids)&
             ~Q(event_id__in=attended_event_ids))
+    
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser
+    
+    def handle_no_permission(self):
+        return redirect('event:admin-dash')
 
 
 @method_decorator(ms_identity_web.login_required,name="dispatch")
-class RegisteredEventsListView(ListView):
+class RegisteredEventsListView(UserPassesTestMixin,ListView):
     model=RegisteredEvent
     template_name='endUserTemplates/registered_events.html'
     # context_object_name='registered_events'
@@ -73,10 +80,15 @@ class RegisteredEventsListView(ListView):
             events = paginator.page(paginator.num_pages)
         context['registered_events'] = events
         return context
+
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser
+    
     
 
 @method_decorator(ms_identity_web.login_required,name="dispatch")
-class EventsHistoryView(ListView):
+class EventsHistoryView(UserPassesTestMixin,ListView):
     model=Attendees
     template_name='endUserTemplates/user_history.html'
     paginate_by=5
@@ -99,9 +111,13 @@ class EventsHistoryView(ListView):
         context['attended_events'] = events
         return context
     
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser   
+    
     
 @method_decorator(ms_identity_web.login_required,name="dispatch")
-class GenerateCertificateView(View):
+class GenerateCertificateView(UserPassesTestMixin,View):
     def post(self,request,pk):
         if self.request.method=='POST':
             user=get_MSAL_user(self.request, ms_identity_web)
@@ -126,3 +142,7 @@ class GenerateCertificateView(View):
             
         else: 
             return HttpResponseBadRequest("Invalid request method")
+        
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser

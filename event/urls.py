@@ -18,7 +18,8 @@ urlpatterns = [
     path('admin/scan',adminViews.ScanEventsListview.as_view(),name='scan-event'),
 
 
-    path('home',endUserViews.EndUserPublishedEventListView.as_view(),name='user-dash'),
+    path('',endUserViews.EndUserPublishedEventListView.as_view(),name='user-dash'),
+    path(r'home/event/<int:pk>',eventViews.UserEventDetailView.as_view(),name='user-event-detail'),
     path('home/registeredevents',endUserViews.RegisteredEventsListView.as_view(),name='registered-events'),
     path('home/attended',endUserViews.EventsHistoryView.as_view(),name='attended-events'),
     path(r'home/attended/<int:pk>/certificate',endUserViews.GenerateCertificateView.as_view(),name='generate-cert'),

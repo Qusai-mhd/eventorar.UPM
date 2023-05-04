@@ -60,10 +60,25 @@ class EventCreateView(UserPassesTestMixin,CreateView):
     
 
 @method_decorator(ms_identity_web.login_required, name='dispatch')
-class EventDetailView(DetailView):
+class EventDetailView(UserPassesTestMixin,DetailView):
     model=Event
     template_name='eventTemplates/crud/detail.html'
     context_object_name='event'
+
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
+class UserEventDetailView(UserPassesTestMixin,DetailView):
+    model=Event
+    template_name='endUserTemplates/event_detail.html'
+    context_object_name='event'
+
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser
 
 
 @method_decorator(ms_identity_web.login_required, name='dispatch')
@@ -175,14 +190,13 @@ class UnPublishEventView(UserPassesTestMixin,FormView):
 
 
 @method_decorator(ms_identity_web.login_required,name="dispatch")
-class EventRegistrationView(View):
+class EventRegistrationView(UserPassesTestMixin,View):
     def post(self,request, pk):
         user=get_MSAL_user(self.request, ms_identity_web)
         published_event=PublishedEvent.objects.get(id=pk)
         user_id=user.id
         published_event_id=published_event.id
-        #Todo: Check if the event target_audience is in the user groups
-        try:
+        try: 
             with transaction.atomic():
                 qr_code_buffer=generate_qr_code(request,event_id=published_event_id,user_id=user_id)
                 send_qr_code(user_id,published_event_id,qr_code_buffer)
@@ -201,3 +215,7 @@ class EventRegistrationView(View):
         except:
             messages.error(self.request,"Can't register for this event! Try again or contact the registrar")
             return render(self.request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
+        
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser

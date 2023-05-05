@@ -61,13 +61,9 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
     def post(self,request):
         if self.request.method=='POST':
             semester=self.request.POST.get('option',None)
-            events=HeldEvent.objects.filter(published_event__event__semester=semester)\
-            .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                      num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))
+            events=HeldEvent.objects.filter(published_event__event__semester=semester)
 
             total_attendees = sum(event.number_of_attendees for event in events)
-            total_males = sum(event.num_males for event in events)
-            total_females = sum(event.num_females for event in events)
 
             user=get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -76,8 +72,6 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
                 'semester': semester,
                 'events': events,
                 'total_attendees': total_attendees,
-                'total_males': total_males,
-                'total_females': total_females,
                 'user':user,
                 'time':time,
             }
@@ -139,12 +133,8 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
         if self.request.method=='POST':
             organizer=self.request.POST.get('option',None)
             events=HeldEvent.objects.filter(published_event__event__organizer=organizer)\
-            .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                      num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))
             
             total_attendees = sum(event.number_of_attendees for event in events)
-            total_males = sum(event.num_males for event in events)
-            total_females = sum(event.num_females for event in events)
 
             user = get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -153,8 +143,6 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
                 'organizer': organizer,
                 'events': events,
                 'total_attendees': total_attendees,
-                'total_males': total_males,
-                'total_females': total_females,
                 'user':user,
                 'time':time,
             }
@@ -209,8 +197,6 @@ class GenerateEventBasedReport(UserPassesTestMixin,View):
     
     def post(self,request,pk):
         event=HeldEvent.objects.filter(id=pk)\
-        .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                    num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))\
                     .select_related('published_event__event')\
                     .first()
         

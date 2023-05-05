@@ -64,8 +64,6 @@
 				<th>Organizer</th>
 				<th>Audience</th>
 				<th>Attendees</th>
-				<th>Males</th>
-				<th>Females</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -76,8 +74,6 @@
 				<td>{{ event.published_event.event.organizer }}</td>
 				<td>{{ event.published_event.target_audience }}</td>
 				<td>{{ event.number_of_attendees }}</td>
-				<td>{{ event.num_males }}</td>
-				<td>{{ event.num_females }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -85,8 +81,6 @@
 			<tr>
 				<td colspan="4"></td>
 				<td>{{ total_attendees }}</td>
-				<td>{{ total_males }}</td>
-				<td>{{ total_females }}</td>
 			</tr>
 		</tfoot>
 	</table>

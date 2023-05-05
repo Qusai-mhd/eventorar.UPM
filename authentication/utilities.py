@@ -24,13 +24,13 @@ def get_MSAL_user(request, identity):
                           first_name=userProfile['givenName'], last_name=userProfile['surname'],
                           ms_id=userProfile['id'])
         user.save()
-        add_user_to_college_group(user.job_title,user.ms_id)
+        add_user_to_college_group(user)
         return user
 
 
-def add_user_to_college_group(job_title,user_id):
-    user=CustomUser.objects.get(ms_id=user_id)
+def add_user_to_college_group(user):
     group_all=Group.objects.get(name='All Colleges')
+    job_title = user.job_title
     if job_title == 'BSFC' or 'BSCSE' or 'BSCAI':
         group=Group.objects.get(name='College Of Computer and Cyber Sciences')
         user.groups.add(group)

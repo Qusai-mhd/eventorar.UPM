@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aa9a8fv^_-b)@_dtd#(xn7+g%*b9t(zg)e8^aku3&)z-r7-8y#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['django-call-graph.azurewebsites.net', 'localhost', '127.0.0.1']
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'event',
     'authentication',
     'celery',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -150,7 +151,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'event/static/'),
     os.path.join(BASE_DIR, 'authentication/static/'),
@@ -198,6 +198,17 @@ AAD_CONFIG.client.authority = os.environ['authority']
 MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
 ERROR_TEMPLATE = 'auth/{}.html'  # for rendering 401 or other errors from msal_middleware
 MIDDLEWARE.append('ms_identity_web.django.middleware.MsalMiddleware')
+
+DEFAULT_FILE_STORAGE = 'Eventorar.azure_blobs.AzureMediaStorage'
+STATICFILES_STORAGE = 'Eventorar.azure_blobs.AzureStaticStorage'
+
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
+
+AZURE_ACCOUNT_NAME = os.environ['storage_account_name']
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 
 # importing logger settings
 try:

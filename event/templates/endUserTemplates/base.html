@@ -23,7 +23,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
       body {
-        background-image: url("/static/img/UserWall.jpeg");
+        {#background-image: {% static 'img/UserWall.jpeg' %}#}
+        {#background-image: url("/static/img/UserWall.jpeg");#}
         background-size: cover; /* resize image to cover entire viewport */
         background-position: center; /* center the image */
         background-repeat: no-repeat; /* don't repeat the image */
@@ -41,7 +42,7 @@
       <meta property="og:title" content="EndUser">
       <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-    <body class="u-body  u-xl-mode" data-lang="en"><header class=" u-header u-section-row-container" id="sec-8c91" style=""><div class="u-section-rows">
+    <body background="{% static 'img/UserWall.jpeg' %}" class="u-body  u-xl-mode" data-lang="en"><header class=" u-header u-section-row-container" id="sec-8c91" style=""><div class="u-section-rows">
           <div class="u-section-row" id="sec-9009">
             <div class="u-clearfix u-sheet u-sheet-1">
               <h1 class="u-custom-font u-text u-text-default u-text-1">EVENTORAR</h1>

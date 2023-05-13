@@ -90,23 +90,26 @@ WSGI_APPLICATION = 'Eventorar.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3'
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bd2gghjmsxdjhsaalruq',
-#         'HOST': 'bd2gghjmsxdjhsaalruq-mysql.services.clever-cloud.com',
-#         'USER': 'uwqk25hpyivbvxyy',
-#         'PASSWORD': 'cVxEc8G7rT2fhoDIABZY',
-#         'PORT':'3306',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite3'
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ['db_name'],
+        'HOST': os.environ['db_host'],
+        'USER': os.environ['db_user'],
+        'PASSWORD': os.environ['db_pass'],
+        'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {'temp': 'change_this_and_use_ssl'}  # TODO: Use SSL
+        }
+    }
+}
 
 MAILJET_API_KEY = os.environ['mailjet_api_key']
 MAILJET_API_SECRET =os.environ['mailjet_api_secret']

@@ -4,25 +4,54 @@ from .models import CustomUser
 from django.contrib.auth.models import Group
 
 
-def acquireUserDetails(identity):
+def call_MS_graph(identity, endpoint):
     identity.acquire_token_silently()
-    graph = 'https://graph.microsoft.com/v1.0/me'
     authZ = f'Bearer {identity.id_data._access_token}'
-    results = requests.get(graph, headers={'Authorization': authZ}).text
+    results = requests.get(endpoint, headers={'Authorization': authZ}).text
     return json.loads(results)
 
 
-def get_MSAL_user(request, identity):
+def get_MSAL_user_old(request, identity):
 
     try:  # Try look for the user in the DB
         uid = request.identity_context_data._id_token_claims['oid']
         return CustomUser.objects.get(ms_id=uid)
 
     except CustomUser.DoesNotExist:  # If not found, create a new user and return it
-        userProfile = acquireUserDetails(identity)
+
+        me_endpoint = 'https://graph.microsoft.com/v1.0/me'
+        userProfile = call_MS_graph(identity, endpoint=me_endpoint)
         user = CustomUser(email=userProfile['mail'], job_title=userProfile['jobTitle'],
                           first_name=userProfile['givenName'], last_name=userProfile['surname'],
                           ms_id=userProfile['id'])
+        user.save()
+        add_user_to_college_group(user)
+        return user
+
+
+def get_MSAL_user(request, identity):
+
+    uid = request.identity_context_data._id_token_claims['oid']
+
+    try:  # Try look for the user in the DB
+        return CustomUser.objects.get(ms_id=uid)
+
+    except CustomUser.DoesNotExist:  # If not found, create a new user and return it
+
+        me_beta_endpoint = 'https://graph.microsoft.com/beta/me/profile'
+        userProfile = call_MS_graph(identity, me_beta_endpoint)
+
+        email = userProfile['emails'][0]['address']
+        job_title = userProfile['positions'][0]['detail']['jobTitle']
+        first_name = userProfile['names'][0]['first']
+        last_name = userProfile['names'][0]['last']
+        gender = userProfile['positions'][0]['detail']['company']['address']['postalCode'].upper()
+
+        gender = gender if (gender in ('M', 'F')) else None
+
+        user = CustomUser(email=email, job_title=job_title,
+                          first_name=first_name, last_name=last_name,
+                          gender=gender, ms_id=uid)
         user.save()
         add_user_to_college_group(user)
         return user

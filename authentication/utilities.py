@@ -1,5 +1,4 @@
 import requests
-import json
 from .models import CustomUser
 from django.contrib.auth.models import Group
 
@@ -7,12 +6,11 @@ from django.contrib.auth.models import Group
 def call_MS_graph(identity, endpoint):
     identity.acquire_token_silently()
     authZ = f'Bearer {identity.id_data._access_token}'
-    results = requests.get(endpoint, headers={'Authorization': authZ}).text
-    return json.loads(results)
+    results = requests.get(endpoint, headers={'Authorization': authZ}).json()
+    return results
 
 
 def get_MSAL_user_old(request, identity):
-
     try:  # Try look for the user in the DB
         uid = request.identity_context_data._id_token_claims['oid']
         return CustomUser.objects.get(ms_id=uid)
@@ -30,7 +28,6 @@ def get_MSAL_user_old(request, identity):
 
 
 def get_MSAL_user(request, identity):
-
     uid = request.identity_context_data._id_token_claims['oid']
 
     try:  # Try look for the user in the DB
@@ -45,8 +42,11 @@ def get_MSAL_user(request, identity):
         job_title = userProfile['positions'][0]['detail']['jobTitle']
         first_name = userProfile['names'][0]['first']
         last_name = userProfile['names'][0]['last']
-        gender = userProfile['positions'][0]['detail']['company']['address']['postalCode'].upper()
 
+        try:
+            gender = userProfile['positions'][0]['detail']['company']['address']['postalCode'].upper()
+        except KeyError:
+            gender = None
         gender = gender if (gender in ('M', 'F')) else None
 
         user = CustomUser(email=email, job_title=job_title,

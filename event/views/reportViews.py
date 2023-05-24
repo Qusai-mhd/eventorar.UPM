@@ -10,13 +10,22 @@ from datetime import datetime
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
+
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateReportView(UserPassesTestMixin,TemplateView):
     template_name='reportTemplates/select_report_type.html'
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
     PAGE_MARGIN = {
@@ -52,23 +61,17 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
     def post(self,request):
         if self.request.method=='POST':
             semester=self.request.POST.get('option',None)
-            events=HeldEvent.objects.filter(published_event__event__semester=semester)\
-            .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                      num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))
+            events=HeldEvent.objects.filter(published_event__event__semester=semester)
 
             total_attendees = sum(event.number_of_attendees for event in events)
-            total_males = sum(event.num_males for event in events)
-            total_females = sum(event.num_females for event in events)
 
-            user=self.request.user
+            user=get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             context = {
                 'semester': semester,
                 'events': events,
                 'total_attendees': total_attendees,
-                'total_males': total_males,
-                'total_females': total_females,
                 'user':user,
                 'time':time,
             }
@@ -88,9 +91,11 @@ class GenerateSemesterBasedReportView(UserPassesTestMixin,View):
             return response
 
     def test_func(self):
-        return self.request.user.is_superuser
-        
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
     PAGE_MARGIN = {
@@ -128,22 +133,16 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
         if self.request.method=='POST':
             organizer=self.request.POST.get('option',None)
             events=HeldEvent.objects.filter(published_event__event__organizer=organizer)\
-            .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                      num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))
             
             total_attendees = sum(event.number_of_attendees for event in events)
-            total_males = sum(event.num_males for event in events)
-            total_females = sum(event.num_females for event in events)
 
-            user=self.request.user
+            user = get_MSAL_user(self.request, ms_identity_web)
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             context = {
                 'organizer': organizer,
                 'events': events,
                 'total_attendees': total_attendees,
-                'total_males': total_males,
-                'total_females': total_females,
                 'user':user,
                 'time':time,
             }
@@ -163,9 +162,11 @@ class GenerateOrganizerBasedReportView(UserPassesTestMixin,View):
             return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class GenerateEventBasedReport(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -196,12 +197,10 @@ class GenerateEventBasedReport(UserPassesTestMixin,View):
     
     def post(self,request,pk):
         event=HeldEvent.objects.filter(id=pk)\
-        .annotate(num_males=Count('attendees__user',filter=Q(attendees__user__gender='M')),\
-                    num_females=Count('attendees__user',filter=Q(attendees__user__gender='F')))\
                     .select_related('published_event__event')\
                     .first()
         
-        user=self.request.user
+        user=get_MSAL_user(self.request, ms_identity_web)
         time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         context = {
@@ -225,9 +224,11 @@ class GenerateEventBasedReport(UserPassesTestMixin,View):
         return response  
 
     def test_func(self):
-        return self.request.user.is_superuser
-    
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class AttendeesListView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -282,9 +283,11 @@ class AttendeesListView(UserPassesTestMixin,View):
         return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
-    
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 @method_decorator(require_POST, name='dispatch')
 class RegistrantsListView(UserPassesTestMixin,View):
     PAGE_SIZE = 'Letter'
@@ -339,4 +342,5 @@ class RegistrantsListView(UserPassesTestMixin,View):
         return response
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser

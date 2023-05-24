@@ -19,7 +19,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -27,10 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aa9a8fv^_-b)@_dtd#(xn7+g%*b9t(zg)e8^aku3&)z-r7-8y#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['django-call-graph.azurewebsites.net', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -44,6 +42,7 @@ INSTALLED_APPS = [
     'event',
     'authentication',
     'celery',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,7 @@ ROOT_URLCONF = 'Eventorar.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'authentication/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'authentication.context_processors.context'
             ],
         },
     },
@@ -76,34 +76,43 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eventorar.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eventorar',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '',
-        'PORT':'3306',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bd2gghjmsxdjhsaalruq',
-#         'HOST': 'bd2gghjmsxdjhsaalruq-mysql.services.clever-cloud.com',
-#         'USER': 'uwqk25hpyivbvxyy',
-#         'PASSWORD': 'cVxEc8G7rT2fhoDIABZY',
+#         'ENGINE': 'django.db.backends.sq',
+#         'NAME': 'eventorar',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': '',
 #         'PORT':'3306',
 #     }
 # }
 
-MAILJET_API_KEY ='a65adf0e9cca920b641f1be4b970942b'
-MAILJET_API_SECRET ='f794fe9f60febe1155b252e6caf03c69'
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite3'
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ['db_name'],
+        'HOST': os.environ['db_host'],
+        'USER': os.environ['db_user'],
+        'PASSWORD': os.environ['db_pass'],
+        'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {'temp': 'change_this_and_use_ssl'}  # TODO: Use SSL
+        }
+    }
+}
+
+MAILJET_API_KEY = os.environ['mailjet_api_key']
+MAILJET_API_SECRET =os.environ['mailjet_api_secret']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'in-v3.mailjet.com'
 EMAIL_PORT = 587
@@ -132,7 +141,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -144,11 +152,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = (
-  os.path.join(BASE_DIR, 'event/static/'),
+    os.path.join(BASE_DIR, 'event/static/'),
+    os.path.join(BASE_DIR, 'authentication/static/'),
 )
 
 # Default primary key field type
@@ -158,7 +166,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL='authentication.CustomUser'
 
-AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
+# AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 
 
 #LOGIN_REDIRECT_URL = 'eventorar/event'
@@ -170,9 +178,8 @@ AUTHENTICATION_BACKENDS = [    'authentication.authentication.EmailBackend',]
 # QR_CODE_URL = '/media/qr_codes/'
 
 # Set the secret key used for encrypting and decrypting the QR code data
-QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
-
-
+# QR_CODE_KEY = 'e-oql5VK5n8wUOtbeYtxCWcAdCQQVHWkWViilOJC29A='
+QR_CODE_KEY=os.environ['qr_code_key']
 # Celery settings
 
 # set the celery broker url
@@ -181,3 +188,34 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 # set the celery timezone
 CELERY_TIMEZONE = 'UTC'
+
+from ms_identity_web.configuration import AADConfig
+from ms_identity_web import IdentityWebPython
+
+AAD_CONFIG = AADConfig.parse_json(file_path='aad.config.json')
+
+AAD_CONFIG.client.client_id = os.environ['client_id']
+AAD_CONFIG.client.client_credential = os.environ['client_credential']
+AAD_CONFIG.client.authority = os.environ['authority']
+
+MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
+ERROR_TEMPLATE = 'auth/{}.html'  # for rendering 401 or other errors from msal_middleware
+MIDDLEWARE.append('ms_identity_web.django.middleware.MsalMiddleware')
+
+DEFAULT_FILE_STORAGE = 'Eventorar.azure_blobs.AzureMediaStorage'
+STATICFILES_STORAGE = 'Eventorar.azure_blobs.AzureStaticStorage'
+
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
+
+AZURE_ACCOUNT_NAME = os.environ['storage_account_name']
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+
+# importing logger settings
+try:
+    from .logger_settings import *
+except Exception as e:
+    # in case of any error, pass silently.
+    pass

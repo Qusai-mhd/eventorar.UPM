@@ -64,8 +64,6 @@
 				<th>Time</th>
 				<th>Audience</th>
 				<th>Attendees</th>
-				<th>Males</th>
-				<th>Females</th>
                 <th>Semester</th>
 			</tr>
 		</thead>
@@ -77,8 +75,6 @@
 				<td>{{ event.published_event.event.time }}</td>
 				<td>{{ event.published_event.target_audience }}</td>
 				<td>{{ event.number_of_attendees }}</td>
-				<td>{{ event.num_males }}</td>
-				<td>{{ event.num_females }}</td>
                 <td>{{ event.published_event.event.semester }}</td>
 			</tr>
 			{% endfor %}
@@ -87,8 +83,6 @@
 			<tr>
 				<td colspan="4"></td>
 				<td>{{ total_attendees }}</td>
-				<td>{{ total_males }}</td>
-				<td>{{ total_females }}</td>
 			</tr>
 		</tfoot>
 	</table>

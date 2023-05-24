@@ -33,7 +33,7 @@
     <tbody>
       {% for event in registered_events %}
       <tr>
-        <td><a href="{% url 'event:event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a></td>
+        <td><a href="{% url 'event:user-event-detail' pk=event.published_event.event.id %}">{{event.published_event.event.name}}</a></td>
         <td>{{event.published_event.event.date}}</td>
         <td>{{event.published_event.date_of_publication}}</td>
       </tr>

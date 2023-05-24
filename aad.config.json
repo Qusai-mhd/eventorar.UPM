@@ -1,0 +1,29 @@
+{
+    "type": {
+        "client_type": "CONFIDENTIAL",
+        "authority_type": "SINGLE_TENANT",
+        "framework": "DJANGO"
+    },
+    "client": {
+        "client_id": ".",
+        "client_credential": ".",
+        "authority": "."
+    },
+    "auth_request": {
+        "redirect_uri": null,
+        "scopes": ["User.Read","User.ReadBasic.All"],
+        "response_type": "code"
+    },
+    "flask": null,
+    "django": {
+        "id_web_configs": "MS_ID_WEB_CONFIGS",
+        "auth_endpoints": {
+            "prefix": "auth",
+            "sign_in": "sign_in",
+            "edit_profile": "edit_profile",
+            "redirect": "check_user",
+            "sign_out": "sign_out",
+            "post_sign_out": "post_sign_out"
+        }
+    }
+}

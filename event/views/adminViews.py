@@ -1,12 +1,19 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from ..models import PublishedEvent,HeldEvent
 from datetime import datetime
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
+
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class PublishedEventListView(UserPassesTestMixin,ListView):
     model=PublishedEvent
     template_name='adminTemplates/published_events.html'
@@ -27,10 +34,11 @@ class PublishedEventListView(UserPassesTestMixin,ListView):
         context['events'] = published_events
         return context
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
-
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class EventHistoryListView(UserPassesTestMixin,ListView):
     model=HeldEvent
     template_name='adminTemplates/history.html'
@@ -51,12 +59,13 @@ class EventHistoryListView(UserPassesTestMixin,ListView):
                 events = paginator.page(paginator.num_pages)
                 context['events'] = events
         return context
-    
+
     def test_func(self):
-        return self.request.user.is_superuser
-    
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required,name="dispatch")
 class ScanEventsListview(UserPassesTestMixin,ListView):
     model=PublishedEvent
     template_name='adminTemplates/available_published_event_to_scan.html'
@@ -65,7 +74,7 @@ class ScanEventsListview(UserPassesTestMixin,ListView):
     def get_queryset(self):
           today=datetime.today().date()
           return PublishedEvent.objects.filter(event__date=today)
-    
+
     def get_context_data(self, **kwargs):
         context = super(ScanEventsListview, self).get_context_data(**kwargs)
         events = self.get_queryset()
@@ -81,5 +90,6 @@ class ScanEventsListview(UserPassesTestMixin,ListView):
         return context
     
     def test_func(self):
-        return self.request.user.is_superuser
-     
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+

@@ -34,7 +34,7 @@
     <tbody>
         {% for event in attended_events %}
         <tr>
-            <td><a href="{% url 'event:event-detail' pk=event.held_event.published_event.event.id %}">{{event.held_event.published_event.event.name}}</a></td>
+            <td><a href="{% url 'event:user-event-detail' pk=event.held_event.published_event.event.id %}">{{event.held_event.published_event.event.name}}</a></td>
             <td>{{event.held_event.published_event.event.date}}</td>
             <td>{{event.held_event.published_event.event.organizer}}</td>
             <td>{{event.held_event.published_event.event.description}}</td>

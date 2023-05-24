@@ -1,0 +1,34 @@
+{% extends '../layout.html' %}
+
+{% block title %}EVENTORAR - Event Management System{% endblock %}
+
+{% block body %}
+<!-- Navigation Bar -->
+
+<!-- Jumbotron -->
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-4">Welcome to EVENTORAR</h1>
+    <p class="lead">The one-stop solution for managing events at University of Prince Mugrin.</p>
+    <hr class="my-4">
+    <p>With our platform, you can easily create, organize, and manage events of any size or type.</p>
+    <a role="button">
+        {% include "../auth/auth-bar-items.html" %}
+    </a>
+  </div>
+</div>
+<!-- About Us Section -->
+<section id="about" class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>About Us</h2>
+        <p>At EVENTORAR, our mission is to simplify the event management process for both organizers and attendees. Our platform is designed to be user-friendly and intuitive, so you can focus on what really matters - creating memorable events that bring people together.</p>
+      </div>
+      <div class="col-md-6">
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -5,20 +5,20 @@ from django.core.exceptions import ValidationError
 
 
 # Create your models here.
-class EndUser(models.Model):
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-    ]
-    email=models.EmailField(unique=True)
-    gender=models.CharField(max_length=1, choices=GENDER_CHOICES)
-
-    class Meta:
-        permissions=(
-            ("can_register_in_all_published_events","To register in all events"),
-            ("can_register_in_male_published_events","To register in male events"),
-            ("can_register_in_female_published_events","To register in female events"),
-        )
+# class EndUser(models.Model):
+#     GENDER_CHOICES = [
+#         ('M', 'Male'),
+#         ('F', 'Female'),
+#     ]
+#     email=models.EmailField(unique=True)
+#     gender=models.CharField(max_length=1, choices=GENDER_CHOICES)
+#
+#     class Meta:
+#         permissions=(
+#             ("can_register_in_all_published_events","To register in all events"),
+#             ("can_register_in_male_published_events","To register in male events"),
+#             ("can_register_in_female_published_events","To register in female events"),
+#         )
 
 class Event(models.Model):
     SE_CLUB='SE CLUB'

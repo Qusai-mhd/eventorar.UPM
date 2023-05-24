@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
@@ -13,7 +12,13 @@ from ..forms import PublishEventForm,UnpublishEventForm
 from .qrCodeViews import generate_qr_code
 from event.tasks import send_qr_code
 
+from django.conf import settings
+from authentication.utilities import get_MSAL_user
 
+ms_identity_web = settings.MS_IDENTITY_WEB
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventListView(UserPassesTestMixin,ListView):
     model=Event
     template_name='adminTemplates/admin_dashboard.html'
@@ -35,8 +40,11 @@ class EventListView(UserPassesTestMixin,ListView):
         return context
     
     def test_func(self):
-        return self.request.user.is_superuser
-    
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventCreateView(UserPassesTestMixin,CreateView):
     model=Event
     template_name='eventTemplates/crud/createEvent.html'
@@ -47,16 +55,33 @@ class EventCreateView(UserPassesTestMixin,CreateView):
         return reverse_lazy('event:event-detail',kwargs={'pk':self.object.id})
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
     
 
-@method_decorator(login_required(login_url='authentication:login'), name='dispatch')
-class EventDetailView(DetailView):
+@method_decorator(ms_identity_web.login_required, name='dispatch')
+class EventDetailView(UserPassesTestMixin,DetailView):
     model=Event
     template_name='eventTemplates/crud/detail.html'
     context_object_name='event'
 
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
+class UserEventDetailView(UserPassesTestMixin,DetailView):
+    model=Event
+    template_name='endUserTemplates/event_detail.html'
+    context_object_name='event'
+
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventUpdateView(UserPassesTestMixin,UpdateView):
     model=Event
     template_name='eventTemplates/crud/update.html'
@@ -68,9 +93,11 @@ class EventUpdateView(UserPassesTestMixin,UpdateView):
         return reverse_lazy('event:event-detail',kwargs={'pk': self.object.id})
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class EventDeleteView(UserPassesTestMixin,DeleteView):
     model=Event
     template_name='eventTemplates/crud/delete.html'
@@ -79,9 +106,11 @@ class EventDeleteView(UserPassesTestMixin,DeleteView):
     success_url=reverse_lazy('event:admin-dash')
 
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class PublishEventView(UserPassesTestMixin,FormView):
     template_name='eventTemplates/publishEvent/publish_event.html'
     form_class=PublishEventForm
@@ -104,13 +133,17 @@ class PublishEventView(UserPassesTestMixin,FormView):
         target_audience = form.cleaned_data['Target_audience']
         event = self.get_event()
         try:
-            with transaction.atomic():
+            with transaction.atomic(): 
                 if target_audience == 'all':
-                    return self.publish(event,"All")
-                elif target_audience == 'm':
-                    return self.publish(event,"Male")
-                elif target_audience == 'f':
-                    return self.publish(event,"Female")
+                    return self.publish(event,"All Colleges")
+                elif target_audience == 'cs':
+                    return self.publish(event,"College Of Computer and Cyber Sciences")
+                elif target_audience == 'eng':
+                    return self.publish(event,"College Of Engineering")
+                elif target_audience == 'bu':
+                    return self.publish(event,'College Of Business Administration')
+                elif target_audience == 'prep':
+                    return self.publish(event,'Prep Year')
                 return render(self.request, 'eventTemplates/publishEvent/publishToAll.html')
         except:
             messages.error(self.request,'Somthing went wrong during publishing the event')
@@ -125,9 +158,11 @@ class PublishEventView(UserPassesTestMixin,FormView):
             return redirect(reverse('event:event-detail', kwargs={'pk': event.id}))
     
     def test_func(self):
-        return self.request.user.is_superuser
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
 
 
+@method_decorator(ms_identity_web.login_required, name='dispatch')
 class UnPublishEventView(UserPassesTestMixin,FormView):
     model=PublishedEvent
     template_name='eventTemplates/publishEvent/unpublish_event.html'
@@ -150,16 +185,18 @@ class UnPublishEventView(UserPassesTestMixin,FormView):
         return super().form_valid(form)
 
     def test_func(self):
-        return self.request.user.is_superuser
-    
-@method_decorator(login_required(login_url='authentication:login'),name="dispatch")   
-class EventRegistrationView(View):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return user.is_superuser
+
+
+@method_decorator(ms_identity_web.login_required,name="dispatch")
+class EventRegistrationView(UserPassesTestMixin,View):
     def post(self,request, pk):
-        user=self.request.user
+        user=get_MSAL_user(self.request, ms_identity_web)
         published_event=PublishedEvent.objects.get(id=pk)
         user_id=user.id
         published_event_id=published_event.id
-        try:
+        try: 
             with transaction.atomic():
                 qr_code_buffer=generate_qr_code(request,event_id=published_event_id,user_id=user_id)
                 send_qr_code(user_id,published_event_id,qr_code_buffer)
@@ -179,3 +216,6 @@ class EventRegistrationView(View):
             messages.error(self.request,"Can't register for this event! Try again or contact the registrar")
             return render(self.request,'eventTemplates/registerEvent/failure_message.html', {"messages": messages.get_messages(request)})
         
+    def test_func(self):
+        user = get_MSAL_user(self.request, ms_identity_web)
+        return not user.is_superuser

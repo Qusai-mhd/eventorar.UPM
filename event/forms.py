@@ -5,9 +5,11 @@ from django.utils import timezone
 
 class PublishEventForm(forms.Form):
     OPTIONS = (
-        ('all', 'All'),
-        ('m', 'Male'),
-        ('f', 'Female')
+        ('all', 'All Colleges'),
+        ('cs', 'College Of Computer and Cyber Sciences'),
+        ('eng', 'College Of Engineering'),
+        ('bu','College Of Business Administration'),
+        ('prep','Prep Year')
     )
     Target_audience = forms.ChoiceField(choices=OPTIONS)
 
